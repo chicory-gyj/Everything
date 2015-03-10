@@ -1,16 +1,43 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <resource_file type="PackedScene" subresource_count="9" version="1.0" version_name="Godot Engine v1.0.stable.custom_build">
-	<ext_resource path="res://coin.gd" type="Script"></ext_resource>
-	<ext_resource path="res://coin.png" type="Texture"></ext_resource>
-	<ext_resource path="res://bullet.png" type="Texture"></ext_resource>
 	<ext_resource path="res://sound_coin.wav" type="Sample"></ext_resource>
+	<ext_resource path="res://bullet.png" type="Texture"></ext_resource>
+	<ext_resource path="res://coin.png" type="Texture"></ext_resource>
+	<ext_resource path="res://coin.gd" type="Script"></ext_resource>
 	<resource type="CircleShape2D" path="local://1">
 		<real name="custom_solver_bias"> 0 </real>
 		<real name="radius"> 10 </real>
 
 	</resource>
 	<resource type="Animation" path="local://2">
-		<string name="resource/name"> "taken" </string>
+		<string name="resource/name"> "spin" </string>
+		<real name="length"> 1.5 </real>
+		<bool name="loop"> True </bool>
+		<real name="step"> 0.25 </real>
+		<string name="tracks/0/type"> "value" </string>
+		<node_path name="tracks/0/path"> "sprite:frame" </node_path>
+		<int name="tracks/0/interp"> 1 </int>
+		<dictionary name="tracks/0/keys" shared="false">
+			<string> "cont" </string>
+			<bool> False </bool>
+			<string> "transitions" </string>
+			<real_array  len="7"> 				1, 1, 1, 1, 1, 1, 1 </real_array>
+			<string> "values" </string>
+			<array  len="7" shared="false">
+				<int> 0 </int>
+				<int> 1 </int>
+				<int> 2 </int>
+				<int> 3 </int>
+				<int> 2 </int>
+				<int> 1 </int>
+				<int> 0 </int>
+			</array>
+			<string> "times" </string>
+			<real_array  len="7"> 				0, 0.25, 0.5, 0.75, 1, 1.25, 1.5 </real_array>
+		</dictionary>
+
+	</resource>
+	<resource type="Animation" path="local://3">
 		<real name="length"> 8 </real>
 		<bool name="loop"> False </bool>
 		<real name="step"> 0 </real>
@@ -112,34 +139,6 @@
 		</dictionary>
 
 	</resource>
-	<resource type="Animation" path="local://3">
-		<string name="resource/name"> "spin" </string>
-		<real name="length"> 1.5 </real>
-		<bool name="loop"> True </bool>
-		<real name="step"> 0.25 </real>
-		<string name="tracks/0/type"> "value" </string>
-		<node_path name="tracks/0/path"> "sprite:frame" </node_path>
-		<int name="tracks/0/interp"> 1 </int>
-		<dictionary name="tracks/0/keys" shared="false">
-			<string> "cont" </string>
-			<bool> False </bool>
-			<string> "transitions" </string>
-			<real_array  len="7"> 				1, 1, 1, 1, 1, 1, 1 </real_array>
-			<string> "values" </string>
-			<array  len="7" shared="false">
-				<int> 0 </int>
-				<int> 1 </int>
-				<int> 2 </int>
-				<int> 3 </int>
-				<int> 2 </int>
-				<int> 1 </int>
-				<int> 0 </int>
-			</array>
-			<string> "times" </string>
-			<real_array  len="7"> 				0, 0.25, 0.5, 0.75, 1, 1.25, 1.5 </real_array>
-		</dictionary>
-
-	</resource>
 	<resource type="SampleLibrary" path="local://4">
 		<dictionary name="samples/coin" shared="false">
 			<string> "db" </string>
@@ -196,8 +195,8 @@
 				<string> "playback/process_mode" </string>
 				<string> "playback/default_blend_time" </string>
 				<string> "root/root" </string>
-				<string> "anims/taken" </string>
 				<string> "anims/spin" </string>
+				<string> "anims/taken" </string>
 				<string> "playback/active" </string>
 				<string> "playback/speed" </string>
 				<string> "blend_times" </string>
