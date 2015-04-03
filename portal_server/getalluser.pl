@@ -1,8 +1,8 @@
 #!/usr/bin/perl
 use IO::Socket;
 my ($acip, $port, $smsg, $sock);
-$acip = '10.50.123.52';
-$port = '7000';
+$acip = '127.0.0.1';
+$port = '2000';
 $sock = IO::Socket::INET->new ( 
     Proto     => 'udp',
     PeerPort  => $port,
