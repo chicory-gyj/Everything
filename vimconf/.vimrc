@@ -112,5 +112,7 @@ set tabstop=4
 set shiftwidth=4
 set expandtab
 
+nmap ,b :cprevious<CR>
+nmap ,m :Tlist<CR>
 nmap ,n :cnext<CR>
 colorscheme default
