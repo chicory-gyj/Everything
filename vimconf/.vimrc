@@ -98,7 +98,6 @@ if !exists(":DiffOrig")
 endif
 
 " For Tlist, by fangz
-
 let Tlist_Auto_Open= 0
 set tags=tags;
 set path+=$PWD/**
@@ -113,4 +112,5 @@ set tabstop=4
 set shiftwidth=4
 set expandtab
 
-colorscheme evening
+nmap ,n :cnext<CR>
+colorscheme default
