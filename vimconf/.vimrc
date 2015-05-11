@@ -1,3 +1,34 @@
+set nocompatible              " be iMproved, required
+filetype off                  " required
+
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+" alternatively, pass a path where Vundle should install plugins
+"call vundle#begin('~/some/path/here')
+
+" let Vundle manage Vundle, required
+Plugin 'gmarik/Vundle.vim'
+Plugin 'taglist.vim'
+Plugin 'ctrlp.vim'
+Plugin 'mileszs/ack.vim'
+" All of your Plugins must be added before the following line
+call vundle#end()            " required
+filetype plugin indent on    " required
+" To ignore plugin indent changes, instead use:
+"filetype plugin on
+"
+" Brief help
+" :PluginList       - lists configured plugins
+" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
+" :PluginSearch foo - searches for foo; append `!` to refresh local cache
+" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
+"
+" see :h vundle for more details or wiki for FAQ
+" Put your non-Plugin stuff after this line
+
+
+
 " An example for a vimrc file.
 "
 " Maintainer:	Bram Moolenaar <Bram@vim.org>
@@ -98,12 +129,14 @@ if !exists(":DiffOrig")
 endif
 
 " For Tlist, by fangz
-let Tlist_Auto_Open= 0
-set tags=tags;
-set path+=$PWD/**
-let Tlist_Exit_OnlyWindow= 1
 let Tlist_Use_Right_Window = 1
 let Tlist_WinWidth = 35
+let Tlist_Exit_OnlyWindow = 1
+let Tlist_Show_One_File = 1
+let g:ctrlp_by_filename = 1
+
+set tags=tags;
+set path+=$PWD/**
 " add c smart edit,by fangz
 set smartindent
 " add edit keep tab = 4 space, by fangz
@@ -112,9 +145,17 @@ set tabstop=4
 set shiftwidth=4
 set expandtab
 
-nmap <F2> :Explore<CR>
+nmap <leader>wq :wq<CR>
+nmap <leader>q :q<CR>
+nmap <leader>c :close<CR>
+nmap <leader>t :cstag<space>
+nmap ,- :Explore<CR>
 nmap ,b :cprevious<CR>
 nmap ,m :Tlist<CR>
 nmap ,n :cnext<CR>
 nmap ,f :find<space>
-colorscheme default
+let g:ctrlp_working_path_mode = 'ra'
+"syntax enable
+"set background=dark
+"let g:solarized_termcolors=256
+"colorscheme solarized
