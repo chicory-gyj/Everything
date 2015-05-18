@@ -12,6 +12,7 @@ Plugin 'gmarik/Vundle.vim'
 Plugin 'taglist.vim'
 Plugin 'ctrlp.vim'
 Plugin 'mileszs/ack.vim'
+Plugin 'simplyzhao/cscope_maps.vim'
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -134,6 +135,7 @@ let Tlist_WinWidth = 35
 let Tlist_Exit_OnlyWindow = 1
 let Tlist_Show_One_File = 1
 let g:ctrlp_by_filename = 1
+let NERDTreeWinSize=20 
 
 set tags=tags;
 set path+=$PWD/**
@@ -154,6 +156,12 @@ nmap ,b :cprevious<CR>
 nmap ,m :Tlist<CR>
 nmap ,n :cnext<CR>
 nmap ,f :find<space>
+
+nmap <C-j> <C-W>j
+nmap <C-h> <C-W>h
+nmap <C-k> <C-W>k
+nmap <C-l> <C-W>l
+
 let g:ctrlp_working_path_mode = 'ra'
 "syntax enable
 "set background=dark
