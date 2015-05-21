@@ -1,5 +1,11 @@
 #include <pcap.h>
 #include <stdio.h>
+#define __init __attribute__ ((constructor(101)))
+void __init init()
+{
+    printf("start...\n");
+}
+
 
 int main(int argc, char *argv[])
 {
@@ -7,7 +13,7 @@ int main(int argc, char *argv[])
     char *dev;          /* The device to sniff on */
     char errbuf[PCAP_ERRBUF_SIZE];  /* Error string */
     struct bpf_program fp;      /* The compiled filter */
-    char filter_exp[] = "port 23";  /* The filter expression */
+    char filter_exp[] = "port 22";  /* The filter expression */
     bpf_u_int32 mask;       /* Our netmask */
     bpf_u_int32 net;        /* Our IP */
     struct pcap_pkthdr header;  /* The header that pcap gives us */

@@ -1,0 +1,9 @@
+* user pcap
+- lpcap need to complie
+- text_interface call GPL_SNIFF->start
+
+* TODO
+- how to run ettercap
+  + 
+- cmake -DENABLE_GTK=OFF -DENABLE_CURSES=OFF ../
+- dlopen for call xx.so 's
