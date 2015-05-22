@@ -1,9 +1,72 @@
-* user pcap
-- lpcap need to complie
-- text_interface call GPL_SNIFF->start
+#+TITLE: 使用 ettercap 
+ 
+* 编译
+#+BEGIN_SRC
+ cd ./ettercap
+ cd ./build
+ cmake -DENABLE_CURSES=OFF -DENABLEf_GTK=OFF ../ 
+#+END_SRC
 
-* TODO
-- how to run ettercap
-  + 
-- cmake -DENABLE_GTK=OFF -DENABLE_CURSES=OFF ../
-- dlopen for call xx.so 's
+* 运行 
+- -T :: Text mode
+- -q :: Quiet mode
+- -z :: Do not perform the initial ARP scan of the LAN
+- -u :: prevent disable ip forward
+- -f :: pcapfilter, same as tcpdump
+- -P :: select plugin
+
+命令:
+#+BEGIN_SRC 
+  sudo ettercap -i eth0 -Tzqu -f "tcp port 80" -P dummy
+#+END_SRC
+
+* 插件使用
+- 使用源码提供的 dummy 小程序，Plugin 以so动态库形式被主程序调用，报文从 HTTP 钩子获取
+- 数据库的操作在 Plugin 中进行 
+
+* 报文流程说明
+#+BEGIN_SRC  
+loop {
+
+      receives a single packet from the pcap callback
+
+      updates the packet statistics
+
+      dump the packet to a file (if the user has requested it)
+
+      if (truncated) continue;
+
+      creates the packet object
+
+      determine the interface where the packet was captured
+
+      HOOK POINT: HOOK_RECEIVED
+
+      starts the protocol decoding
+         -> the packet is decoded by decoder and the po is filled
+            -> the ip and tcp sessions are created
+
+         -> the middle layer is called (only if TCP or UDP)
+            -> if (PO_DONT_DISSECT) return;
+            -> set the PO_IGNORE according to the visualization filters
+            -> HOOK POINT: HOOK_HANDLED
+            -> if (PO_IGNORE) return;
+            -> execute the dissectors
+            -> HOOK POINT: HOOK_DECODED
+            -> execute the filtering engine
+            -> HOOK POINT: HOOK_FILTER
+            -> a copy of the packet is added to the top_half queue
+
+      if (PO_FORWARDABLE) {
+         HOOK POINT: HOOK_PRE_FORWARD
+         forward the packet to the real host (the victim)
+      }
+
+      destroy the packet object
+
+   }
+#+END_SRC 
+
+
+ 
+ 
