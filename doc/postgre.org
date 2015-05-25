@@ -1,0 +1,64 @@
+* create datebase
+#+BEGIN_SRC 
+$ createdb mydb
+$ dropdb mydb
+#+END_SRC 
+* run
+#+BEGIN_SRC
+$ /usr/local/pgsql/bin/postgres -D /usr/local/pgsql/data &
+$ psql mydb
+#+END_SRC
+
+* create table
+#+BEGIN_SRC sql 
+CREATE TABLE TCPSession (
+       TCPSessionSeq 	integer,
+
+       UserJoinSeq   	integer,
+       NATSrcIP	    	inet,
+       NATSrcPort    	integer,
+
+       SrcMac	 	macaddr,
+       DstMac 		macaddr,
+       SrcIP  	 	inet,
+       DstIP 	 	inet,
+       SrcPort 		integer,
+       DstPort 		integer,
+
+       RxBytes 		integer,
+       TxBytes 		integer,
+
+       ApplicationType 	varchar(20),
+
+       BeginTime        timestamptz,
+       EndTime 	 	timestamptz
+);
+#+END_SRC
+
+#+BEGIN_SRC sql 
+CREATE TABLE HTTPSession (
+       HTTPSessionSeq 	 integer,
+
+       TCPSessionSeq 	 integer,
+
+       HTTPHost		 varchar(1024),
+       HTTPUrl 		 varchar(1024),
+       HTTPReferer 	 varchar(1024),
+       HTTPUserAgent 	 varchar(1024),
+
+       ContentType 	 varchar(80),
+
+       BeginTime 	 timestamptz,
+       EndTime           timestamptz
+);
+#+END_SRC
+
+#+BEGIN_SRC  
+DROP TABLE tablename
+#+END_SRC
+
+* build program
+#+BEGIN_SRC 
+cc -c -I/usr/local/pgsql/include testlibpq.c
+cc -o haha testlibpq.o -L/usr/local/pgsql/lib -Wl,-dn -lpg -Wl,-dy
+#+END_SRC
