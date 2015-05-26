@@ -5,6 +5,8 @@
  cd ./ettercap
  cd ./build
  cmake -DENABLE_CURSES=OFF -DENABLEf_GTK=OFF ../ 
+ make
+ make install
 #+END_SRC
 
 * 运行 

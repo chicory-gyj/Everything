@@ -60,5 +60,9 @@ DROP TABLE tablename
 * build program
 #+BEGIN_SRC 
 cc -c -I/usr/local/pgsql/include testlibpq.c
-cc -o haha testlibpq.o -L/usr/local/pgsql/lib -Wl,-dn -lpg -Wl,-dy
+cc -o haha testlibpq.o -L/usr/local/pgsql/lib -Wl,-dn -lpq -Wl,-dy
 #+END_SRC
+
+** how to complie in ettercap?
+
+
