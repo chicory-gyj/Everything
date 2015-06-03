@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>postgre</title>
-<!-- 2015-05-26 二 19:36 -->
+<!-- 2015-05-28 四 15:18 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <style type="text/css">
@@ -221,6 +221,50 @@ $ psql mydb
 </pre>
 </div>
 
+<div class="org-src-container">
+
+<pre class="src src-sql">CREATE TABLE UserSession (
+       UserJoinSeq  	 integer,
+
+       ProberJoinSeq  	 integer,
+
+       UserDevMac  	 macaddr,
+       UserDevIP 	 inet,
+       UserDevBSSID  	 macaddr,
+       UserDevSSID  	 varchar(80),
+       UserDevAPID  	 integer,
+
+       JoinTime  	 timestamptz,
+       LeaveTime  	 timestamptz
+);
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="src src-sql">create table allsession (
+       http_serial	integer,
+
+       src_hwaddr 	macaddr,
+       dst_hwaddr  	macaddr,
+       src_ipaddr  	inet,
+       dst_ipaddr  	inet,
+       nat_ipaddr  	inet,
+       src_port  	integer,
+       dst_port  	integer,
+       nat_port  	integer,
+
+       http_host  	varchar(1024),
+       http_url  	varchar(1024),
+       http_referer  	varchar(1024),
+       http_agent  	varchar(1024),
+
+       time_joined  	timestamptz,
+       time_leaved  	timestamptz
+);
+</pre>
+</div>
+
 <pre class="example">
 DROP TABLE tablename
 </pre>
@@ -242,7 +286,7 @@ cc -o haha testlibpq.o -L/usr/local/pgsql/lib -Wl,-dn -lpq -Wl,-dy
 </div>
 </div>
 <div id="postamble" class="status">
-<p class="date">Created: 2015-05-26 二 19:36</p>
+<p class="date">Created: 2015-05-28 四 15:18</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.5.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>

@@ -10,46 +10,48 @@ $ psql mydb
 #+END_SRC
 
 * create table
-#+BEGIN_SRC sql 
-CREATE TABLE TCPSession (
-       TCPSessionSeq 	integer,
 
-       UserJoinSeq   	integer,
-       NATSrcIP	    	inet,
-       NATSrcPort    	integer,
+#+BEGIN_SRC sql
+create table http_session (
+       http_serial        serial8,
 
-       SrcMac	 	macaddr,
-       DstMac 		macaddr,
-       SrcIP  	 	inet,
-       DstIP 	 	inet,
-       SrcPort 		integer,
-       DstPort 		integer,
+       src_hwaddr         macaddr,
+       dst_hwaddr         macaddr,
+       src_ipaddr         inet,
+       dst_ipaddr         inet,
+       nat_ipaddr         inet,
+       src_port           int,
+       dst_port           int,
+       nat_port           int,
 
-       RxBytes 		integer,
-       TxBytes 		integer,
+       http_host          varchar(512),
+       http_url           varchar(512),
+       http_referer       varchar(512),
+       http_agent         varchar(512),
 
-       ApplicationType 	varchar(20),
-
-       BeginTime        timestamptz,
-       EndTime 	 	timestamptz
+       time_joined        timestamptz,
+       time_leaved        timestamptz
 );
-#+END_SRC
+create table http_session (
+       http_serial      SERIAL,
 
-#+BEGIN_SRC sql 
-CREATE TABLE HTTPSession (
-       HTTPSessionSeq 	 integer,
+       src_hwaddr  	macaddr,
+       dst_hwaddr  	macaddr,
+       src_ipaddr  	inet,
+       dst_ipaddr  	inet,
+       nat_ipaddr  	inet,
+       src_port  	integer,
+       dst_port  	integer,
+       nat_port  	integer,
 
-       TCPSessionSeq 	 integer,
+       http_host  	varchar(1024),
+       http_url  	varchar(1024),
+       http_referer  	varchar(1024),
+       http_agent  	varchar(1024),
 
-       HTTPHost		 varchar(1024),
-       HTTPUrl 		 varchar(1024),
-       HTTPReferer 	 varchar(1024),
-       HTTPUserAgent 	 varchar(1024),
 
-       ContentType 	 varchar(80),
-
-       BeginTime 	 timestamptz,
-       EndTime           timestamptz
+       time_joined  	timestamptz,
+       time_leaved  	timestamptz
 );
 #+END_SRC
 
