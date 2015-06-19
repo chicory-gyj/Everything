@@ -3,6 +3,7 @@
 $ createdb mydb
 $ dropdb mydb
 #+END_SRC 
+
 * run
 #+BEGIN_SRC
 $ /usr/local/pgsql/bin/postgres -D /usr/local/pgsql/data &
@@ -32,26 +33,53 @@ create table http_session (
        time_joined        timestamptz,
        time_leaved        timestamptz
 );
-create table http_session (
-       http_serial      SERIAL,
+#+END_SRC
 
-       src_hwaddr  	macaddr,
-       dst_hwaddr  	macaddr,
-       src_ipaddr  	inet,
-       dst_ipaddr  	inet,
-       nat_ipaddr  	inet,
-       src_port  	integer,
-       dst_port  	integer,
-       nat_port  	integer,
+#+BEGIN_SRC sql
+create table qq_session (
+       qq_serial 	serial8,
 
-       http_host  	varchar(1024),
-       http_url  	varchar(1024),
-       http_referer  	varchar(1024),
-       http_agent  	varchar(1024),
+       src_hwaddr         macaddr,
+       dst_hwaddr         macaddr,
+       src_ipaddr         inet,
+       dst_ipaddr         inet,
+       nat_ipaddr         inet,
+       src_port           int,
+       dst_port           int,
+       nat_port           int,
 
+       qq_flag  	  int,
+       qq_version  	  int,
+       qq_command  	  int,
+       qq_sequence  	  int,
+       qq_number  	  int,
 
-       time_joined  	timestamptz,
-       time_leaved  	timestamptz
+       time_joined        timestamptz
+       );
+#+END_SRC
+
+#+BEGIN_SRC sql
+create table mail_session (
+       mail_serial  	  serial8,
+
+       src_hwaddr         macaddr,
+       dst_hwaddr         macaddr,
+       src_ipaddr         inet,
+       dst_ipaddr         inet,
+       nat_ipaddr         inet,
+       src_port           int,
+       dst_port           int,
+       nat_port           int,
+
+       mail_from   	  varchar(64),
+       mail_to   	  varchar(64),
+       mail_cc            varchar(64),
+       mail_agent         varchar(64),
+       mail_messageid     varchar(64),
+       mail_xmailer       varchar(64),
+       mail_subject   	  varchar(128),
+
+       timestamp   	  timestamptz
 );
 #+END_SRC
 

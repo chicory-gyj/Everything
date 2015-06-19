@@ -50,8 +50,9 @@ if($wlanacname=="")
 open FILE,"/usr/local/ps/ps_ac.conf"
  or die "Can't open it";
 @ip = grep {/$wlanacname/i}<FILE>;
-$ip[0] =~ s/$wlanacname    //;
+$ip[0] =~ s/$wlanacname//;
 chomp(@ip);
+$ip[0] =~ s/^\s+//;
 $wlanacip = $ip[0];
 
 foreach $var (sort(keys(%ENV))) {
