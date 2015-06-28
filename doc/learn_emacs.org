@@ -1,0 +1,3 @@
+M-shift-RET call org-insert-todo-heading
+C-c C-t run org-todo
+C-x 1 ony this window
