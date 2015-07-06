@@ -1,8 +1,11 @@
 * Tasks
-** TODO 支持数据库的重启恢复
+** DONE 支持数据库的重启恢复
+   CLOSED: [2015-07-06 一 15:21]
 ** TODO 抓包只抓入口报文
-** TODO apache重定向
+** DONE apache重定向
+   CLOSED: [2015-07-06 一 15:21]
 ** DONE 学习orgmode链接
    CLOSED: [2015-06-25 四 16:46]
 [[http://orgmode.org/worg/org-tutorials/orgtutorial_dto.html][TODO学习]]
-** TODO 
+** TODO qq在线表
+ -  
