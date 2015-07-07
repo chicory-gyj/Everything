@@ -7,11 +7,15 @@
 ** DONE 学习orgmode链接
    CLOSED: [2015-06-25 四 16:46]
 [[http://orgmode.org/worg/org-tutorials/orgtutorial_dto.html][TODO学习]]
-** TODO qq在线表
-   1. login
-    - update qq_session set T3=(select T2 from qq_session where mac=mac and qq=qq and t3=null) where mac=mac and qq=qq and T3=null;
-    - insert into qq_session values (); 
-   2. logout
-    - update qq_session set T3=now where mac=mac and qq=qq and T3=null;
+** DONE qq在线表
+   CLOSED: [2015-07-07 二 15:23]
+   1. login，0x0001，"Log out"
+    - update qq_session set T3=(select T2 from qq_session where mac=mac and qq=qq and t3 is null) 
+      where mac=mac and qq=qq and T3 is null;
+    - insert into qq_session values ();
+ 
+   2. logout, 0x0062, "request log in"
+    - update qq_session set T3=now where mac=mac and qq=qq and T3 is null;
+
    3. other
-    - update qq_session set T2=now where mac=mac and qq=qq and T3=null;
+    - update qq_session set T2=now where mac=mac and qq=qq and T3 is null;
