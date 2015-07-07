@@ -5,7 +5,16 @@ void __init init()
 {
     printf("start...\n");
 }
-
+void callback(u_char *userless, const struct pcap_pkthdr* pkthdr, const u_char* packet)
+{
+    const u_char* tmp = packet;
+    printf("mac:%x:%x:%x:%x:%x:%x\n",tmp[6],tmp[7],tmp[8],tmp[9],tmp[10],tmp[11]);
+    printf("%x\n", tmp[42+0]);
+    printf("%x%x\n", tmp[42+1], tmp[42+2]);
+    printf("%x%x\n", tmp[42+3], tmp[42+4]);
+    printf("%x%x\n", tmp[42+5], tmp[42+6]);
+    printf("qq:%x%x%x%x\n",tmp[42+7], tmp[42+8], tmp[42+9], tmp[42+10]);  
+}
 
 int main(int argc, char *argv[])
 {
@@ -13,7 +22,7 @@ int main(int argc, char *argv[])
     char *dev;          /* The device to sniff on */
     char errbuf[PCAP_ERRBUF_SIZE];  /* Error string */
     struct bpf_program fp;      /* The compiled filter */
-    char filter_exp[] = "port 22";  /* The filter expression */
+    char filter_exp[] = "port 8000";  /* The filter expression */
     bpf_u_int32 mask;       /* Our netmask */
     bpf_u_int32 net;        /* Our IP */
     struct pcap_pkthdr header;  /* The header that pcap gives us */
@@ -47,10 +56,11 @@ int main(int argc, char *argv[])
         return(2);
     }
     /* Grab a packet */
-    packet = pcap_next(handle, &header);
+    //packet = pcap_next(handle, &header);
+    pcap_loop(handle, 0, callback, NULL);
     /* Print its length */
-    printf("Jacked a packet with length of [%d]\n", header.len);
-    printf("%s",packet);
+    //printf("Jacked a packet with length of [%d]\n", header.len);
+    //printf("%s",packet);
     /* And close the session */
     pcap_close(handle);
     return(0);
