@@ -19,3 +19,17 @@
 
    3. other
     - update qq_session set T2=now where mac=mac and qq=qq and T3 is null;
+** DONE 王阳阳challenge一直已建立问题
+   CLOSED: [2015-07-13 一 14:29]
+  - 终端ip重复
+** TODO AP的重定向携带url
+*** TODO 写文档
+*** TODO 测试
+** DONE 答复吴静流量字段
+   CLOSED: [2015-07-13 一 14:29]
+** TODO 外场杰赛认证繁忙问题
+** TODO 微信信息截获
+** DONE 广东portal推不出来帮助解决
+   CLOSED: [2015-07-14 二 15:40]
+   1. nat端口要放开
+
