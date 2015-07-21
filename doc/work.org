@@ -1,9 +1,10 @@
 * Tasks
 ** DONE 支持数据库的重启恢复
    CLOSED: [2015-07-06 一 15:21]
-** TODO 抓包只抓入口报文
+** TODO 抓包只抓入口报文（挂起）
 ** DONE apache重定向
    CLOSED: [2015-07-06 一 15:21]
+1. 使用php
 ** DONE 学习orgmode链接
    CLOSED: [2015-06-25 四 16:46]
 [[http://orgmode.org/worg/org-tutorials/orgtutorial_dto.html][TODO学习]]
@@ -19,17 +20,21 @@
 
    3. other
     - update qq_session set T2=now where mac=mac and qq=qq and T3 is null;
-** DONE 王阳阳challenge一直已建立问题
+** DONE 重庆challenge一直已建立问题
    CLOSED: [2015-07-13 一 14:29]
   - 终端ip重复
-** TODO AP的重定向携带url
-*** TODO 写文档
-*** TODO 测试
+** DONE AP的重定向携带url
+   CLOSED: [2015-07-15 三 16:50]
 ** DONE 答复吴静流量字段
    CLOSED: [2015-07-13 一 14:29]
-** TODO 外场杰赛认证繁忙问题
+** DONE 外场杰赛认证繁忙问题（DHCP）
+   CLOSED: [2015-07-16 四 16:56]
+1. dhcp有问题，2.2.5.2-1496 版本vlan查询错误
+   dhcp编译有问题：find . -type f |xargs file |grep CR|awk -F : '{print $1}'|xargs sed -i 's!\r!!' 
 ** TODO 微信信息截获
 ** DONE 广东portal推不出来帮助解决
    CLOSED: [2015-07-14 二 15:40]
    1. nat端口要放开
 
+** DONE 外场杰赛没有话单
+   CLOSED: [2015-07-16 四 16:56]
