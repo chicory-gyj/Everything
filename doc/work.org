@@ -33,8 +33,24 @@
    dhcp编译有问题：find . -type f |xargs file |grep CR|awk -F : '{print $1}'|xargs sed -i 's!\r!!' 
 ** TODO 微信信息截获
 ** DONE 广东portal推不出来帮助解决
-   CLOSED: [2015-07-14 二 15:40]
+   CLOSED: [2015-07-23 四 14:05]
    1. nat端口要放开
 
 ** DONE 外场杰赛没有话单
    CLOSED: [2015-07-16 四 16:56]
+** DONE 中科新业对接安朗url携带广园信息
+   CLOSED: [2015-07-28 二 09:23]
+#	modified:   hr/ac_hr_func.c
+#	modified:   hr/ac_hr_func.h
+#	modified:   hr/ac_hr_main.c
+#	modified:   powerac/usrm/ac_usrm_if.c
+#	modified:   powerac/usrm/ac_usrm_public.h
+
+** TODO 运营商携带apmac(待确认)
+** TODO 审计功能需求
+** TODO 运营商推不出portal
+** TODO 中科新业问题？
+** DONE 基于ac2780出hrd补丁，携带url
+   CLOSED: [2015-07-28 二 18:09]
+** DONE 吴静的account携带giga字段
+   CLOSED: [2015-07-29 三 16:51]
