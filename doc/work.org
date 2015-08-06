@@ -1,4 +1,4 @@
-* Tasks
+* Task 7
 ** DONE 支持数据库的重启恢复
    CLOSED: [2015-07-06 一 15:21]
 ** TODO 抓包只抓入口报文（挂起）
@@ -48,9 +48,56 @@
 
 ** TODO 运营商携带apmac(待确认)
 ** TODO 审计功能需求
+*** TODO URL过滤大量非主动性访问报文
+*** TODO  
 ** TODO 运营商推不出portal
 ** TODO 中科新业问题？
 ** DONE 基于ac2780出hrd补丁，携带url
    CLOSED: [2015-07-28 二 18:09]
 ** DONE 吴静的account携带giga字段
    CLOSED: [2015-07-29 三 16:51]
+
+* Task 8
+** TODO 审计功能需求
+*** TODO URL过滤大量非主动性访问报文
+- 过滤方法：get
+- 过滤格式：css/js/png/jpg/ico/gif
+*** TODO HTTP整理
+#+BEGIN_SRC sql
+  create table HTTP_INFO {
+  URL             varchar(255),
+  METHOD          varchar(4),
+  TITLE           varchar(64),
+  POSTCONTENT     varchar(255),
+  USERNAME        varchar(64),
+  PASSWORD        varchar(64),
+  KEYWORD         varchar(255),
+  MAINFILE        varchar(255),
+  FILESIZE        varchar(11)
+  };
+#+End_SRC
+*** TODO QQ信息整理
+#+BEGIN_SRC sql
+  create table IM_MSG {
+  IM_TYPE      varchar(32),
+  USERNAME     varchar(64),
+  PASSWORD     varchar(64),
+  FROM_ID      varchar(64),
+  TO_ID        varchar(64),
+  CONTENT      varchar(255),
+  ACTION       varchar(10),
+  MAINFILE     varchar(255),
+  FROMNICKNAME varchar(64),
+  TONICKNAME   varchar(64)
+  };
+| IM_TYPE     | 1030001   |
+| USERNAME    |           |
+| PASSWORD    |           |
+| FROM_ID     | QQ_number |
+| TO_ID       |           |
+| CONTENT     |           |
+| ACTION      | COMMAND   |
+| MAINFILE    |           |
+| FROMNICNAME |           |
+| TONICKNAME  |           |
+#+END_SRC
