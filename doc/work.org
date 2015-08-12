@@ -78,7 +78,28 @@
 #+End_SRC
 *** TODO QQ信息整理
 #+BEGIN_SRC sql
-  create table IM_MSG {
+  create table IM_MSG (
+  SRC_SYS                 varchar(40),
+  DST_SYS                 varchar(40),
+  DATA_TYPE               varchar(32),
+  CLUES_ID                varchar(40),
+  SRC_IP                  varchar(128),
+  DST_IP                  varchar(128),
+  SRC_PORT                varchar(20),
+  DST_PORT                varchar(20),
+  CAPTURE_TIME            varchar(20),
+  SERVICE_CODE            varchar(20),
+  BASE_STATION_ID         varchar(20),
+  MAC_ADDRESS             varchar(20),
+  AUTH_TYPE               varchar(20),
+  AUTH_ACCOUNT            varchar(40),
+  SERVICE_TYPE            varchar(40),
+  SESSION_ID              varchar(255),
+  LONGITUDE               varchar(11),
+  LATITUDE                varchar(11),
+  IMSI                    varchar(128),
+  EQUIPMENT_ID            varchar(128),
+
   IM_TYPE      varchar(32),
   USERNAME     varchar(64),
   PASSWORD     varchar(64),
@@ -89,15 +110,18 @@
   MAINFILE     varchar(255),
   FROMNICKNAME varchar(64),
   TONICKNAME   varchar(64)
-  };
-| IM_TYPE     | 1030001   |
-| USERNAME    |           |
-| PASSWORD    |           |
-| FROM_ID     | QQ_number |
-| TO_ID       |           |
-| CONTENT     |           |
-| ACTION      | COMMAND   |
-| MAINFILE    |           |
-| FROMNICNAME |           |
-| TONICKNAME  |           |
+  );
 #+END_SRC
+  | IM_TYPE     | 1030001   |
+  | USERNAME    |           |
+  | PASSWORD    |           |
+  | FROM_ID     | QQ_number |
+  | TO_ID       |           |
+  | CONTENT     |           |
+  | ACTION      | COMMAND   |
+  | MAINFILE    |           |
+  | FROMNICNAME |           |
+  | TONICKNAME  |           |
+
+    
+    
