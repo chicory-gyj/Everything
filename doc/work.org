@@ -131,3 +131,5 @@
 - mac与用户名相同情况下，usrm模块不更新用户名。导致不发计费报文
 ** TODO url增加了apip,mac格式
 ** TODO 中科新业无感知问题
+** TODO MAC认证服务器搭建
+** TODO 域名字段增加
