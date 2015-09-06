@@ -1,0 +1,62 @@
+* git
+** 找出修改的c文件和头文件
+git status |grep modified |grep -E '.c$|.h$'|awk '{print $3}' |xargs
+** git机器间克隆
+git clone root@10.50.123.52:/home/hello 
+** diff
+svn status|grep "\.c$"|awk '{print $2}'|xargs svn diff
+
+* grub
+** grub 恢复
+    grub> root (hd0,0)
+    grub> find /boot/grub/stage1
+    grub> setup (hd0)
+    grub> setup (hd0,0)
+* iptables
+** nat
+iptables -t nat -A POSTROUTING -p tcp -s 192.2.1.0/24 -j SNAT --to-source 10.60.0.235:1024-65535
+iptables -t nat -A PREROUTING -p tcp -s 10.60.0.182/255.255.255.255 --dport 443 -j REDIRECT --to-ports 5000
+
+* diff
+diff -ENwbur build/ wlc1/ 
+** 更新
+diff -Naur old_file new_file > patch.1.0
+patch -p0 < patch.1.0
+#old_file will update 
+
+* find
+find . -type f -exec touch {} \; 
+* portal
+** portal新方法
+1.目的地服务器放行， iptables -t nat -I PREROUTING -d 10.50.123.222 -j ACCEPT
+2.用户地址段重定向至9000，iptables -t nat -A PREROUTING -p tcp -s 172.168.0.0/255.255.0.0 --dport 80 -j REDIRECT --to-ports 9000
+3.认证完用户ip放行（利用ip set提高效率），规则插入在 2 之前 
+
+* eloop
+eloop_run有段小技巧：利用select完成timeout
+
+* vi
+** 替换
+:%s/vivian/sky/g vi替换所有
+** 显示换行
+如果你使用以下命令进入<list mode>，那么就可以清楚的看到以“$”表示的换行符和以“^I”表示的制表符。
+:set list 
+
+* hrd
+cd /usr/local/ac/config/; sed -i  '/notify_mac/d'  hr.conf ; sed -i '2i\notify_mac = 0' hr.conf 
+* dhcp
+** dhcp不能编译,原因是文件里面携带了 \r 
+find . -type f |xargs file |grep CR|awk -F : '{print $1}'|xargs sed -i 's!\r!!' 
+
+* vpn
+fail:
+pptpsetup --create vpn --server 10.1.1.85 --username fangzheng --password www8gbcom9COM~CN! --encrypt --start
+OK:
+(pppd call vpn logfd 2 nodetach debug dump refuse-eap &)
+route add default gw 192.168.168.106 
+
+* yum
+yum groupinstall -y   "Desktop"   "Desktop Platform"   "Desktop Platform Development"　 "Fonts" 　"General Purpose Desktop"　 "Graphical Administration Tools"　 "Graphics Creation Tools" 　"Input Methods" 　"X Window System" 　"Chinese Support [zh]"　"Internet Browser" 
+
+* color
+\e[0;32m $PWD \e[0m 
