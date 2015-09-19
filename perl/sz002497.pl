@@ -1,5 +1,5 @@
 #!/bin/env perl
-$id = "sh600095";
+$id = "sz002497";
 
 $filename = "/samba/";
 $filename .=$id;

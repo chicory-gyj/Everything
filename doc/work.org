@@ -124,7 +124,9 @@
   | TONICKNAME  |           |
    
 ** TODO nasid与apip地址绑定
-** TODO ac与portal服务器断链情况下触发用户免认证
+** DONE ac与portal服务器断链情况下触发用户免认证
+利用perl脚本发起curl请求，ioctl设置认证状态
+   CLOSED: [2015-09-14 一 13:25]
 ** TODO QQ多终端问题
 ** DONE portalv2计费报文没有
    CLOSED: [2015-08-13 Thu 19:37]
@@ -134,3 +136,11 @@
 ** TODO 中科新业无感知问题
 ** TODO MAC认证服务器搭建
 ** TODO 域名字段增加
+* Task 9
+** TODO 烽火代码阅读
+** TODO AP内存泄漏
+** DONE 杰赛认证不通过
+iptables未放行导致
+   CLOSED: [2015-09-14 一 13:24]
+** DONE 排查企业网9000端口被占用
+中毒，admin账户放开导致被攻击

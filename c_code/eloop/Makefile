@@ -1,4 +1,4 @@
-TARGET = hostapd
+TARGET = eloop
 
 SOURCES_PATH = ./:
 vpath %.c $(SOURCES_PATH) 
@@ -11,3 +11,5 @@ CFLAGS = -lrt
 
 $(TARGET): $(OBJS)
 	gcc -o $@ $(INCLUDE) $(CFLAGS) $(OBJS)
+clean:
+	rm -rf *.o $(TARGET)

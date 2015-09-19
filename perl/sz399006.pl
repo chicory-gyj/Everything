@@ -1,5 +1,5 @@
 #!/bin/env perl
-$id = "sh600095";
+$id = "sz399006";
 
 $filename = "/samba/";
 $filename .=$id;
@@ -12,11 +12,11 @@ $hour = `date "+%H"`;
 
 $cmd = `tail -n 1 $filename`;
 print $cmd;
-$cmd =~ /:(\d+) (\d+) (-?\d+.\d+) \+(\d+) $/;
+$cmd =~ /:(\d+) (\d+)亿 (-?\d+.\d+) \+(\d+) $/;
 $last = $2;
 if($last == NULL)
 {
-    $last = 0;
+    $last =0;
 }
 print "haha ",$2," 11";
 if($time == "0915")
@@ -30,21 +30,24 @@ if(($time >= "0925" && $time <= "1131") || ($time >= "1300" && $time <= "1501"))
 else
 {
     print $time;
-    exit;
+    exit
 }
 
 good:
-$command = `curl "http://qt.gtimg.cn/r=479864314&q=$id"`;
+$command = `curl --retry 3 "http://qt.gtimg.cn/r=479864314&q=$id"`;
+print "\n",$command,"\n";
 $origin = $command;
 $ext = $origin;
-$ext =~ /\/(\d+)\/(\d+)~(\d+)~(-?\d+.\d+)~(-?\d+.\d+)/;
-$ext = $5;
+$ext =~ /M\/(\d+)\/(\d+)~(\d+)~(-?(\d+).(\d+))~((-?)(\d+).(\d+))/;
+print $7;
+$ext = $7;
 if($ext==NULL)
 {
     $ext=0;
 }
-print "\n",$command,"\n";
-$command =~ /(\d+)~(\d+).(\d+)~(\d+).(\d+)~~/;
+$command =~ /~(\d+)~~~~/;
+$vol = $1/10000;
+$vol =~ /(\d+)./;
 $vol = $1;
 if($vol == NULL)
 {
@@ -53,5 +56,5 @@ if($vol == NULL)
 $delta = $vol - $last;
 $date = `date "+%H:%M"`;
 chomp($date);
-print file $date," ", $vol," $ext ","+",$delta," ";
+print file $date," ", $vol,"亿 $ext ","+",$delta," ";
 

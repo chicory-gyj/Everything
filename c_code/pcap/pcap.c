@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
         mask = 0;
     }
     /* Open the session in promiscuous mode */
-    handle = pcap_open_live(dev, BUFSIZ, 1, 1000, errbuf);
+    handle = pcap_open_live("eth0 br0", BUFSIZ, 1, 1000, errbuf);
     if (handle == NULL) {
         fprintf(stderr, "Couldn't open device %s: %s\n", dev, errbuf);
         return(2);
@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
     pcap_loop(handle, 0, callback, NULL);
     /* Print its length */
     //printf("Jacked a packet with length of [%d]\n", header.len);
-    //printf("%s",packet);
+    printf("%s",packet);
     /* And close the session */
     pcap_close(handle);
     return(0);
