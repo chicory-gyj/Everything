@@ -137,7 +137,10 @@
 ** TODO MAC认证服务器搭建
 ** TODO 域名字段增加
 * Task 9
-** TODO 烽火代码阅读
+** TODO 烽火代码整理
+*** TODO 抓包
+*** TODO 配置文件加载
+
 ** TODO AP内存泄漏
 ** DONE 杰赛认证不通过
 iptables未放行导致
