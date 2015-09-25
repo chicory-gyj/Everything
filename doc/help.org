@@ -36,11 +36,34 @@ find . -type f -exec touch {} \;
 eloop_run有段小技巧：利用select完成timeout
 
 * vi
+** 查找
+you might first place the cursor on the word "foo" then press * to search for that word. 
 ** 替换
 :%s/vivian/sky/g vi替换所有
 :%s/AD_DBG_LVL_\u\+, //g 去掉AD_DBG_LVL_DEBUG,AD_DBG_LVL_INFO之类
 :%s/AUDIT_DATA_LOG/LOG_AL/g
 :s/\t//g 去掉tab
+:%s/foo/bar/gc //Change each 'foo' to 'bar', but ask for confirmation first. 
+:%s/\<foo\>/bar/gc //Change only whole words exactly matching 'foo' to 'bar'; ask for confirmation. 
+:%s/foo/bar/gci Change each 'foo' (case insensitive due to the i flag) to 'bar'; ask for confirmation. 
+:%s/foo/bar/gcI Change each 'foo' (case sensitive due to the I flag) to 'bar'; ask for confirmation. 
+:'<,'>s/foo/bar/g 	
+When compiled with +visual, change each 'foo' to 'bar' for all lines within a visual selection. Vim automatically appends the visual selection range ('<,'>) for any ex command when you select an area and enter :. Also, see Note below. 
+:.,+2s/foo/bar/g 	Change each 'foo' to 'bar' for the current line (.) and the two next lines (+2).
+:g/^baz/s/foo/bar/g 	
+    Change each 'foo' to 'bar' in each line starting with 'baz'. 
+\{#\} is used for repetition. /foo.\{2\} will match foo and the two following characters. The \ is not required on the closing } so /foo.\{2} will do the same thing. 
+:s/Copyright \zs2007\ze All Rights Reserved/2008/  2007->2008 \zs \ze 
+    start and end
+:%s//bar/g 
+    you need press "*" to search first
+:%s/\<foo\>.*//
+    On each line, delete the whole word "foo" and all following text (to end of line). 
+:s/^\(\w\)/\u\1/
+    If the first character at the beginning of the current line only is lowercase, switch it to uppercase using \u
+
+
+
 ** 显示换行
 如果你使用以下命令进入<list mode>，那么就可以清楚的看到以“$”表示的换行符和以“^I”表示的制表符。
 :set list 
