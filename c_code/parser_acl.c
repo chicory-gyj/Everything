@@ -265,7 +265,6 @@ int parese_acl_to_expression(char *acl, char *expression)
     char unpack[128];
     pos = acl;
     end = acl;
-    pos += strlen("acl=");
     printf("parse,%s\n", acl);
     for(pos; pos != NULL; pos = strstr(end,"<"))
     {
@@ -303,7 +302,6 @@ int parese_dns_to_expression(char *dns, char *expression)
     char unpack[128];
     pos = dns;
     end = dns;
-    pos += strlen("dns=");
     printf("parse,%s\n", dns);
     for(pos; pos != NULL; pos = strstr(end,"<"))
     {
@@ -312,7 +310,7 @@ int parese_dns_to_expression(char *dns, char *expression)
         memset(unpack, 0, sizeof(unpack));
         memset(&stImDns, 0 ,sizeof(stImDns));
         strncpy(pack, pos+1, end - pos - 1);
-        sscanf(pack, "%[^,],%[^,],%[^,],%[^,]", stImDns.szDomainName, stImDns.szPort, stImDns.szType,\
+        sscanf(pack, "%[^,],%[^,],%[^,],%[^,]", stImDns.szDomainName, stImDns.szType, stImDns.szPort, \
         stImDns.szAction);
 
         ad_mirror_creat_dns_rule(unpack, stImDns);
@@ -330,8 +328,8 @@ int parese_dns_to_expression(char *dns, char *expression)
 }
 int main()
 {
-        char *acl= "acl=<10.1.1.1,80,192.1.1.1,80,1,0>;<1.1.1.1,80,192.1.1.1,89,1,0>"; 
-        char *dns= "dns=<web.chat.qq.com,*,80,2>";
+        char *acl= "<10.1.1.1,80,192.1.1.1,80,1,0>;<1.1.1.1,80,192.1.1.1,89,1,0>"; 
+        char *dns= "<web.chat.qq.com,1,80,2>";
         char expression[9800];
         parese_acl_to_expression(acl, expression);
         printf("%s\n",expression);

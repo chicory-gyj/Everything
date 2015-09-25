@@ -40,6 +40,7 @@ eloop_run有段小技巧：利用select完成timeout
 :%s/vivian/sky/g vi替换所有
 :%s/AD_DBG_LVL_\u\+, //g 去掉AD_DBG_LVL_DEBUG,AD_DBG_LVL_INFO之类
 :%s/AUDIT_DATA_LOG/LOG_AL/g
+:s/\t//g 去掉tab
 ** 显示换行
 如果你使用以下命令进入<list mode>，那么就可以清楚的看到以“$”表示的换行符和以“^I”表示的制表符。
 :set list 
@@ -61,7 +62,7 @@ route add default gw 192.168.168.106
 yum groupinstall -y   "Desktop"   "Desktop Platform"   "Desktop Platform Development"　 "Fonts" 　"General Purpose Desktop"　 "Graphical Administration Tools"　 "Graphics Creation Tools" 　"Input Methods" 　"X Window System" 　"Chinese Support [zh]"　"Internet Browser" 
 
 * color
-\e[0;32m $PWD \e[0m 
+  \e[0;32m $PWD \e[0m 
 * awk
 tail -n 1 /samba/sh000001.org|awk '{ i=1;while(i<NF) {if((i%4)==1) {print $i,$(i+1),$(i+2),$(i+3)} i=i+4}}' 
 tail -n 3 /samba/sh000001.org|head -n 1|awk '{ i=1;while(i<NF) {if((i%4)==1) {print $i,$(i+1),$(i+2),$(i+3)} i=i+4}}'
@@ -82,3 +83,9 @@ ssh -NfR 0.0.0.0:9990:localhost:22 root@180.168.191.198 -o GatewayPorts=yes -o C
 你家里的电脑只要这么访问：
 ssh root@180.168.191.198 -p 9990
 
+* qstartdic
+* align
+:AlignCtrl l 左对齐
+:AlignCtrl r 右对齐
+:AlignCtrl lrlr 第一部分左对齐，第二部分右对其 ...
+:AlignCtrl lp0P0 左对其, 左空一，右空一
