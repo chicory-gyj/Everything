@@ -1,13 +1,14 @@
 #!/usr/bin/perl
 # udpmsg - send a message to the udpquotd server
 use Digest::MD5 qw(md5 md5_hex md5_base64);
+use Encode qw(decode encode);
 
 print "Content-type: text/html\n\n";
 
 print "======debug start======<br>"; 
 #----------
 chomp (my $para=<STDIN>);
-my ($username, $password, $wlanacip, $wlanuserip, @array, $temp,$wlanacname);
+my ($username, $password, $wlanacip, $wlanuserip, @array, $temp,$wlanacname, $version);
 print "$para<br>";
 
 @array = split(/&/,$para);
@@ -28,6 +29,7 @@ foreach $temp (@array)
   {	
       $temp =~ s/username=//;
       $username = $temp;
+      print "$username<br>";
   }
   elsif($temp =~ /password/)
   {
@@ -39,7 +41,23 @@ foreach $temp (@array)
       $temp =~ s/wlanacname=//;
       $wlanacname = $temp;
   }
+  elsif($temp =~ /ver=/)
+  {
+	  $temp =~ s/ver=//;
+	  $version = $temp;
+  }
+  elsif($temp =~ /houzhui=/)
+  {
+	  $temp =~ s/houzhui//;
+	  $houzhui = $temp;
+  }
 }
+if($houzhui==1)
+{
+	$username .= "@163";
+	print "$username<br>";
+}
+
 if($wlanacip!= "")
 {
 	goto HAVEACIP;
@@ -53,7 +71,9 @@ open FILE,"/usr/local/ps/ps_ac.conf"
 $ip[0] =~ s/$wlanacname//;
 chomp(@ip);
 $ip[0] =~ s/^\s+//;
+
 $wlanacip = $ip[0];
+
 
 foreach $var (sort(keys(%ENV))) {
     $val = $ENV{$var};
@@ -72,7 +92,7 @@ print "ACIP:$wlanacip,USERIP:$wlanuserip, USERNAME:$username, PASSWORD:$password
 use IO::Socket;
  
 my ( $sock, $port, $ipaddr, $hishost, $iparray, @iparray, 
-     $MAXLEN, $PORTNO, $TIMEOUT, $serialno, $reqid, $req_challenge, $ack_challenge);
+     $MAXLEN, $PORTNO, $TIMEOUT, $serialno, $reqid, $req_challenge, $ack_challenge, $Request_Authenticator, $buff, $Response_Authenticator);
  
 $MAXLEN  = 1024;
 $PORTNO  = 2000;
@@ -84,7 +104,20 @@ $serialno = 1;
 @iparray = split(/\./, $wlanuserip);
 #print "wlanuserip : $wlanuserip @iparray<br>";
 
-$req_challenge = pack ("C C C C n n C4 n C C", 1, 1, 0, 0, $serialno, $reqid, @iparray, 0, 0, 0);
+if($version == 2)
+{
+	$buff = pack ("C C C C n n C4 n C C", 2, 1, 0, 0, $serialno, $reqid, @iparray, 0, 0, 0);
+	$buff .= pack ("C16",0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0);
+	$buff .= "123456";
+	$Request_Authenticator = md5($buff);
+	print "Request_Authenticator: ", unpack("H*",$Request_Authenticator),"<br>";
+	$req_challenge = pack ("C C C C n n C4 n C C", 2, 1, 0, 0, $serialno, $reqid, @iparray, 0, 0, 0);
+	$req_challenge .= $Request_Authenticator; 	
+}
+else
+{
+	$req_challenge = pack ("C C C C n n C4 n C C", 1, 1, 0, 0, $serialno, $reqid, @iparray, 0, 0, 0);
+}
 
 print "REQ_CHALLENGE: ",unpack("H*",$req_challenge),"<br>";
 
@@ -118,9 +151,11 @@ my ( $ucVer, $ucType, $ucAuthType, $ucRsv, $usSerialNo, $usReqID,
 ( $ucVer, $ucType, $ucAuthType, $ucRsv, $usSerialNo, $usReqID,
     $aucUserIP[0],$aucUserIP[1],$aucUserIP[2],$aucUserIP[3], $usUserPort, $ucErrCode, $ucAttrNum, $ATTR ) = 
     unpack("C C C C n n C4 n C C C*", $ack_challenge );
-
-
 my ( $challenge_id, $chappassword, $data);
+if($ucVer == 2)
+{
+	goto VER2;
+}
 
 if(unpack("x16 C",$ack_challenge) == 3)
 {
@@ -142,9 +177,43 @@ else
 {
 	die "FAIL!";
 }
+VER2:
+if($ucVer == 2)
+{
+	if(unpack("x32 C", $ack_challenge) == 3)
+	{
+		$ATTR = substr($ack_challenge, 34, 16);
+		print  "challenge:",unpack("H*", $ATTR),"<br>";
+		$challenge_id = $ATTR;
+		$data .= pack("C", $usReqID);
+		$data .= $password;
+		$data .= $ATTR;		
+		$chappassword = md5($data);
+		print "chappassword:",$chappassword,"<br>";
+		print "chappassword:",unpack("H*",$chappassword),"<br>";
+	}
+	else{die "FAIL!"};
+}
 
 my ($req_auth);
-$req_auth = pack ("C C C C n n C4 n C C C C A* C C", 1, 3, 0, 0, $serialno+1, $usReqID, @iparray, 0, 0, 2, 1, length($username)+2, $username, 4, 18);
+if($ucVer ==2)
+{
+	$buff = pack ("C C C C n n C4 n C C", 2, 3, 0, 0, $serialno+1, $usReqID, @iparray, 0, 0, 2);
+	$buff .= pack ("C16",0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0);
+	$buff .= pack ("C C A* C C", 1, length($username)+2, $username, 4, 18);
+	$buff .= $chappassword;
+	$buff .= "123456";
+	$Request_Authenticator = md5($buff);
+	print "Request_Authenticator: ", unpack("H*",$Request_Authenticator),"<br>";
+	$buff = pack ("C C C C n n C4 n C C", 2, 3, 0, 0, $serialno+1, $usReqID, @iparray, 0, 0, 2);
+	$buff .= $Request_Authenticator;
+	$buff .= pack ("C C A* C C", 1, length($username)+2, $username, 4, 18);
+	$req_auth = $buff;	
+}
+else
+{
+	$req_auth = pack ("C C C C n n C4 n C C C C A* C C", 1, 3, 0, 0, $serialno+1, $usReqID, @iparray, 0, 0, 2, 1, length($username)+2, $username, 4, 18);
+}
 $msg = $req_auth;
 $req_auth = $msg.$chappassword;
 
@@ -173,10 +242,25 @@ my($ackauth_ucVer, $ackauth_ucType, $ackauth_ucAuthType, $ackauth_ucRsv, $ackaut
 
 if($ackauth_ucErrCode == 0)
 {
-	 $aff_auth_ack =  pack("C C C C n n C4 n C C",$ackauth_ucVer, 7, $ackauth_ucAuthType, $ackauth_ucRsv, $ackauth_usSerialNo, $ackauth_usReqID,
-    		@ackauth_aucUserIP, $ackauth_usUserPort, $ackauth_ucErrCode, $ackauth_ucAttrNum);
-	 print "AFF_AUTH_ACK: ",unpack("H*", $aff_auth_ack),"<br>";
-	 $sock->send ( $aff_auth_ack ) or die "send: $!";
+	if($ucVer == 2)
+	{
+		$buff =  pack("C C C C n n C4 n C C",$ackauth_ucVer, 7, $ackauth_ucAuthType, $ackauth_ucRsv, $ackauth_usSerialNo, $ackauth_usReqID,
+				@ackauth_aucUserIP, $ackauth_usUserPort, $ackauth_ucErrCode, $ackauth_ucAttrNum);
+		$buff .= pack ("C16",0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0);
+		$buff .= "123456";
+		$Request_Authenticator = md5($buff);
+		print "Request_Authenticator: ", unpack("H*",$Request_Authenticator),"<br>";
+		$aff_auth_ack =  pack("C C C C n n C4 n C C",$ackauth_ucVer, 7, $ackauth_ucAuthType, $ackauth_ucRsv, $ackauth_usSerialNo, $ackauth_usReqID,
+				@ackauth_aucUserIP, $ackauth_usUserPort, $ackauth_ucErrCode, $ackauth_ucAttrNum);
+		$aff_auth_ack .= $Request_Authenticator;
+	}
+	else
+	{
+		$aff_auth_ack =  pack("C C C C n n C4 n C C",$ackauth_ucVer, 7, $ackauth_ucAuthType, $ackauth_ucRsv, $ackauth_usSerialNo, $ackauth_usReqID,
+				@ackauth_aucUserIP, $ackauth_usUserPort, $ackauth_ucErrCode, $ackauth_ucAttrNum);
+	} 
+	print "AFF_AUTH_ACK: ",unpack("H*", $aff_auth_ack),"<br>";
+	$sock->send ( $aff_auth_ack ) or die "send: $!";
 }
 else
 {
@@ -188,14 +272,16 @@ else
 print "======debug end======<br>";
 
 print "<font color=\"#0000FF\">PORTAL AUTH SUCCESS</font>","<br>";
+print "<form action=\"/cgi-bin/logout.pl\" method=\"post\">
+        <input type=\"hidden\" name=\"wlanuserip\" value=\"$wlanuserip\">
+        <input type=\"hidden\" name=\"wlanacip\" value=\"$wlanacip\">
+        <input type=\"submit\" value=\"offline\" />
+        </form>";
 die;
+
 
 FAIL:
 print "======debug end======<br>";
-
 print "<font color=\"#FF0000\">PORTAL AUTH FAIL!!!</font>","<br>";
-
-
-
 
 
