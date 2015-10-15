@@ -112,3 +112,12 @@ ssh root@180.168.191.198 -p 9990
 :AlignCtrl r 右对齐
 :AlignCtrl lrlr 第一部分左对齐，第二部分右对其 ...
 :AlignCtrl lp0P0 左对其, 左空一，右空一
+* c complie
+question: #define to_find "^.*\.(dat)?" 
+The warning is coming from the C compiler. It is telling you that \. is not a known escape sequence in C. Since this string is going to a regex engine, you need to double-escape the slash, like this:
+#define to_find "^.*\\.(dat)?"
+* compile different version
+fabius8@centos6:~/wlansvn/ac-xa01-2.5.X.X $ svn status|grep Makefile                                                                                                       1 ↵
+M       syslog/Makefile
+M       pa/Makefile
+M       Makefile
