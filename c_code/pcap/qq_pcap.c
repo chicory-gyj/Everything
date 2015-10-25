@@ -9,7 +9,7 @@ void callback(u_char *userless, const struct pcap_pkthdr* pkthdr, const u_char* 
 {
     const u_char* tmp = packet;
     int len = pkthdr->len;
-    //printf("caplen:%d\n", pkthdr->caplen);
+    printf("caplen:%d\n", pkthdr->caplen);
     //printf("len:%d\n", pkthdr->len);
     if((len >= 52) && (tmp[42] == 0x02) && (tmp[len-1] == 0x03) && !((tmp[45] == 0)&&(tmp[46] == 0))) /*qq flag must be 0x02*/
     {

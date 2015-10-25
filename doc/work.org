@@ -123,11 +123,11 @@
   | FROMNICNAME |           |
   | TONICKNAME  |           |
    
-** TODO nasid与apip地址绑定
+** DONE nasid与apip地址绑定
 ** DONE ac与portal服务器断链情况下触发用户免认证
 利用perl脚本发起curl请求，ioctl设置认证状态
    CLOSED: [2015-09-14 一 13:25]
-** TODO QQ多终端问题
+** DONE QQ多终端问题
 ** DONE portalv2计费报文没有
    CLOSED: [2015-08-13 Thu 19:37]
 - mac与用户名相同情况下，usrm模块不更新用户名。导致不发计费报文
@@ -147,3 +147,8 @@ iptables未放行导致
    CLOSED: [2015-09-14 一 13:24]
 ** DONE 排查企业网9000端口被占用
 中毒，admin账户放开导致被攻击
+* Task 10
+** TODO CGW500上线,审计服务器
+** TODO 正则表达式合入
+** TODO 云平台网关portal server方案
+
