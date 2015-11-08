@@ -4,10 +4,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>work</title>
-<!-- 2015-08-04 Tue 17:08 -->
+<!-- 2015-11-03 二 19:22 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
-<meta  name="author" content="高雅洁" />
 <style type="text/css">
  <!--/*--><![CDATA[/*><!--*/
   .title  { text-align: center; }
@@ -221,6 +220,34 @@ for the JavaScript code in this tag.
 <li><a href="#sec-2-1-3">2.1.3. <span class="todo TODO">TODO</span> QQ信息整理</a></li>
 </ul>
 </li>
+<li><a href="#sec-2-2">2.2. <span class="done DONE">DONE</span> nasid与apip地址绑定</a></li>
+<li><a href="#sec-2-3">2.3. <span class="done DONE">DONE</span> ac与portal服务器断链情况下触发用户免认证</a></li>
+<li><a href="#sec-2-4">2.4. <span class="done DONE">DONE</span> QQ多终端问题</a></li>
+<li><a href="#sec-2-5">2.5. <span class="done DONE">DONE</span> portalv2计费报文没有</a></li>
+<li><a href="#sec-2-6">2.6. <span class="done DONE">DONE</span> url增加了apip</a></li>
+<li><a href="#sec-2-7">2.7. <span class="todo TODO">TODO</span> 中科新业无感知问题</a></li>
+<li><a href="#sec-2-8">2.8. <span class="todo TODO">TODO</span> MAC认证服务器搭建</a></li>
+<li><a href="#sec-2-9">2.9. <span class="todo TODO">TODO</span> 域名字段增加</a></li>
+</ul>
+</li>
+<li><a href="#sec-3">3. Task 9</a>
+<ul>
+<li><a href="#sec-3-1">3.1. <span class="todo TODO">TODO</span> 烽火代码整理</a>
+<ul>
+<li><a href="#sec-3-1-1">3.1.1. <span class="todo TODO">TODO</span> 抓包</a></li>
+<li><a href="#sec-3-1-2">3.1.2. <span class="todo TODO">TODO</span> 配置文件加载</a></li>
+</ul>
+</li>
+<li><a href="#sec-3-2">3.2. <span class="todo TODO">TODO</span> AP内存泄漏</a></li>
+<li><a href="#sec-3-3">3.3. <span class="done DONE">DONE</span> 杰赛认证不通过</a></li>
+<li><a href="#sec-3-4">3.4. <span class="done DONE">DONE</span> 排查企业网9000端口被占用</a></li>
+</ul>
+</li>
+<li><a href="#sec-4">4. Task 10</a>
+<ul>
+<li><a href="#sec-4-1">4.1. <span class="todo TODO">TODO</span> CGW500上线,审计服务器</a></li>
+<li><a href="#sec-4-2">4.2. <span class="todo TODO">TODO</span> 正则表达式合入</a></li>
+<li><a href="#sec-4-3">4.3. <span class="todo TODO">TODO</span> 云平台网关portal server方案</a></li>
 </ul>
 </li>
 </ul>
@@ -260,24 +287,24 @@ for the JavaScript code in this tag.
 <ol class="org-ol">
 <li>login，0x0001，"Log out"
 <ul class="org-ul">
-<li>update qq_session set T3=(select T2 from qq_session where mac=mac and qq=qq and t3 is null) 
+<li>update qq<sub>session</sub> set T3=(select T2 from qq<sub>session</sub> where mac=mac and qq=qq and t3 is null) 
 where mac=mac and qq=qq and T3 is null;
 </li>
-<li>insert into qq_session values ();
+<li>insert into qq<sub>session</sub> values ();
 </li>
 </ul>
 </li>
 
 <li>logout, 0x0062, "request log in"
 <ul class="org-ul">
-<li>update qq_session set T3=now where mac=mac and qq=qq and T3 is null;
+<li>update qq<sub>session</sub> set T3=now where mac=mac and qq=qq and T3 is null;
 </li>
 </ul>
 </li>
 
 <li>other
 <ul class="org-ul">
-<li>update qq_session set T2=now where mac=mac and qq=qq and T3 is null;
+<li>update qq<sub>session</sub> set T2=now where mac=mac and qq=qq and T3 is null;
 </li>
 </ul>
 </li>
@@ -335,11 +362,11 @@ dhcp编译有问题：find . -type f |xargs file |grep CR|awk -F : '{print $1}'|
 <h3 id="sec-1-13"><span class="section-number-3">1.13</span> <span class="done DONE">DONE</span> 中科新业对接安朗url携带广园信息</h3>
 <div class="outline-text-3" id="text-1-13">
 <p>
-#        modified:   hr/ac_hr_func.c
-#        modified:   hr/ac_hr_func.h
-#        modified:   hr/ac_hr_main.c
-#        modified:   powerac/usrm/ac_usrm_if.c
-#        modified:   powerac/usrm/ac_usrm_public.h
+#  modified:   hr/ac<sub>hr</sub><sub>func</sub>.c
+#  modified:   hr/ac<sub>hr</sub><sub>func</sub>.h
+#  modified:   hr/ac<sub>hr</sub><sub>main</sub>.c
+#  modified:   powerac/usrm/ac<sub>usrm</sub><sub>if</sub>.c
+#  modified:   powerac/usrm/ac<sub>usrm</sub><sub>public</sub>.h
 </p>
 </div>
 </div>
@@ -417,38 +444,203 @@ FILESIZE        varchar(11)
 <div class="outline-text-4" id="text-2-1-3">
 <div class="org-src-container">
 
-<pre class="src src-sql">  create table IM_MSG {
-  IM_TYPE      varchar(32),
-  USERNAME     varchar(64),
-  PASSWORD     varchar(64),
-  FROM_ID      varchar(64),
-  TO_ID        varchar(64),
-  CONTENT      varchar(255),
-  ACTION       varchar(10),
-  MAINFILE     varchar(255),
-  FROMNICKNAME varchar(64),
-  TONICKNAME   varchar(64)
-  };
-| IM_TYPE     | 1030001   |
-| USERNAME    |           |
-| PASSWORD    |           |
-| FROM_ID     | QQ_number |
-| TO_ID       |           |
-| CONTENT     |           |
-| ACTION      | COMMAND   |
-| MAINFILE    |           |
-| FROMNICNAME |           |
-| TONICKNAME  |           |
+<pre class="src src-sql">create table IM_MSG (
+SRC_SYS                 varchar(40),
+DST_SYS                 varchar(40),
+DATA_TYPE               varchar(32),
+CLUES_ID                varchar(40),
+SRC_IP                  varchar(128),
+DST_IP                  varchar(128),
+SRC_PORT                varchar(20),
+DST_PORT                varchar(20),
+CAPTURE_TIME            varchar(20),
+SERVICE_CODE            varchar(20),
+BASE_STATION_ID         varchar(20),
+MAC_ADDRESS             varchar(20),
+AUTH_TYPE               varchar(20),
+AUTH_ACCOUNT            varchar(40),
+SERVICE_TYPE            varchar(40),
+SESSION_ID              varchar(255),
+LONGITUDE               varchar(11),
+LATITUDE                varchar(11),
+IMSI                    varchar(128),
+EQUIPMENT_ID            varchar(128),
+
+IM_TYPE      varchar(32),
+USERNAME     varchar(64),
+PASSWORD     varchar(64),
+FROM_ID      varchar(64),
+TO_ID        varchar(64),
+CONTENT      varchar(255),
+ACTION       varchar(10),
+MAINFILE     varchar(255),
+FROMNICKNAME varchar(64),
+TONICKNAME   varchar(64)
+);
 </pre>
 </div>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="left">IM<sub>TYPE</sub></td>
+<td class="left">1030001</td>
+</tr>
+
+<tr>
+<td class="left">USERNAME</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">PASSWORD</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">FROM<sub>ID</sub></td>
+<td class="left">QQ<sub>number</sub></td>
+</tr>
+
+<tr>
+<td class="left">TO<sub>ID</sub></td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">CONTENT</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">ACTION</td>
+<td class="left">COMMAND</td>
+</tr>
+
+<tr>
+<td class="left">MAINFILE</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">FROMNICNAME</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">TONICKNAME</td>
+<td class="left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
+</div>
+
+<div id="outline-container-sec-2-2" class="outline-3">
+<h3 id="sec-2-2"><span class="section-number-3">2.2</span> <span class="done DONE">DONE</span> nasid与apip地址绑定</h3>
+</div>
+<div id="outline-container-sec-2-3" class="outline-3">
+<h3 id="sec-2-3"><span class="section-number-3">2.3</span> <span class="done DONE">DONE</span> ac与portal服务器断链情况下触发用户免认证</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+利用perl脚本发起curl请求，ioctl设置认证状态
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2-4" class="outline-3">
+<h3 id="sec-2-4"><span class="section-number-3">2.4</span> <span class="done DONE">DONE</span> QQ多终端问题</h3>
+</div>
+<div id="outline-container-sec-2-5" class="outline-3">
+<h3 id="sec-2-5"><span class="section-number-3">2.5</span> <span class="done DONE">DONE</span> portalv2计费报文没有</h3>
+<div class="outline-text-3" id="text-2-5">
+<ul class="org-ul">
+<li>mac与用户名相同情况下，usrm模块不更新用户名。导致不发计费报文
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-2-6" class="outline-3">
+<h3 id="sec-2-6"><span class="section-number-3">2.6</span> <span class="done DONE">DONE</span> url增加了apip</h3>
+<div class="outline-text-3" id="text-2-6">
+</div>
+</div>
+<div id="outline-container-sec-2-7" class="outline-3">
+<h3 id="sec-2-7"><span class="section-number-3">2.7</span> <span class="todo TODO">TODO</span> 中科新业无感知问题</h3>
+</div>
+<div id="outline-container-sec-2-8" class="outline-3">
+<h3 id="sec-2-8"><span class="section-number-3">2.8</span> <span class="todo TODO">TODO</span> MAC认证服务器搭建</h3>
+</div>
+<div id="outline-container-sec-2-9" class="outline-3">
+<h3 id="sec-2-9"><span class="section-number-3">2.9</span> <span class="todo TODO">TODO</span> 域名字段增加</h3>
+</div>
+</div>
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> Task 9</h2>
+<div class="outline-text-2" id="text-3">
+</div><div id="outline-container-sec-3-1" class="outline-3">
+<h3 id="sec-3-1"><span class="section-number-3">3.1</span> <span class="todo TODO">TODO</span> 烽火代码整理</h3>
+<div class="outline-text-3" id="text-3-1">
+</div><div id="outline-container-sec-3-1-1" class="outline-4">
+<h4 id="sec-3-1-1"><span class="section-number-4">3.1.1</span> <span class="todo TODO">TODO</span> 抓包</h4>
+</div>
+<div id="outline-container-sec-3-1-2" class="outline-4">
+<h4 id="sec-3-1-2"><span class="section-number-4">3.1.2</span> <span class="todo TODO">TODO</span> 配置文件加载</h4>
+</div>
+</div>
+
+<div id="outline-container-sec-3-2" class="outline-3">
+<h3 id="sec-3-2"><span class="section-number-3">3.2</span> <span class="todo TODO">TODO</span> AP内存泄漏</h3>
+</div>
+<div id="outline-container-sec-3-3" class="outline-3">
+<h3 id="sec-3-3"><span class="section-number-3">3.3</span> <span class="done DONE">DONE</span> 杰赛认证不通过</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+iptables未放行导致
+</p>
+</div>
+</div>
+<div id="outline-container-sec-3-4" class="outline-3">
+<h3 id="sec-3-4"><span class="section-number-3">3.4</span> <span class="done DONE">DONE</span> 排查企业网9000端口被占用</h3>
+<div class="outline-text-3" id="text-3-4">
+<p>
+中毒，admin账户放开导致被攻击
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> Task 10</h2>
+<div class="outline-text-2" id="text-4">
+</div><div id="outline-container-sec-4-1" class="outline-3">
+<h3 id="sec-4-1"><span class="section-number-3">4.1</span> <span class="todo TODO">TODO</span> CGW500上线,审计服务器</h3>
+</div>
+<div id="outline-container-sec-4-2" class="outline-3">
+<h3 id="sec-4-2"><span class="section-number-3">4.2</span> <span class="todo TODO">TODO</span> 正则表达式合入</h3>
+<div class="outline-text-3" id="text-4-2">
+<ol class="org-ol">
+<li>http 报文会产生tcp分片
+</li>
+<li>http 下行报文过滤
+</li>
+<li>源 tcp port
+</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-sec-4-3" class="outline-3">
+<h3 id="sec-4-3"><span class="section-number-3">4.3</span> <span class="todo TODO">TODO</span> 云平台网关portal server方案</h3>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
-<p class="author">Author: 高雅洁</p>
-<p class="date">Created: 2015-08-04 Tue 17:08</p>
+<p class="date">Created: 2015-11-03 二 19:22</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.5.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>

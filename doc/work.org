@@ -137,7 +137,7 @@
 ** TODO MAC认证服务器搭建
 ** TODO 域名字段增加
 * Task 9
-** TODO 烽火代码整理
+** DONE 烽火代码整理
 *** TODO 抓包
 *** TODO 配置文件加载
 
@@ -148,6 +148,13 @@ iptables未放行导致
 ** DONE 排查企业网9000端口被占用
 中毒，admin账户放开导致被攻击
 * Task 10
-** TODO CGW500上线,审计服务器
-** TODO 正则表达式合入
+** DONE CGW500上线,审计服务器 
+** DONE 正则表达式合入
+1. http 报文会产生tcp分片
+2. http 下行报文过滤
+3. 源tcp port 80 
+* Task 11
 ** TODO 云平台网关portal server方案
+1. 终端访问任何网站,redirect to login-wifi
+2. 终端在login页面输入登录信息,发送给云平台
+3. 云平台将终端重定向到网关, 携带token. _云平台保存了用户名和密码,计算出的chappassword处理???_

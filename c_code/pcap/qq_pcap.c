@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
     char *dev;          /* The device to sniff on */
     char errbuf[PCAP_ERRBUF_SIZE];  /* Error string */
     struct bpf_program fp;      /* The compiled filter */
-    char filter_exp[] = "udp dst port 8000 or tcp dst port 443 or tcp dst port 8080";  /* The filter expression */
+    char filter_exp[] = "udp dst port 8000 or tcp dst port 443 or tcp dst port 8080 or tcp dst port 80";  /* The filter expression */
     bpf_u_int32 mask;       /* Our netmask */
     bpf_u_int32 net;        /* Our IP */
     struct pcap_pkthdr header;  /* The header that pcap gives us */
