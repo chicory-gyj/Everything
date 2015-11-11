@@ -121,3 +121,12 @@ fabius8@centos6:~/wlansvn/ac-xa01-2.5.X.X $ svn status|grep Makefile            
 M       syslog/Makefile
 M       pa/Makefile
 M       Makefile
+* ruby
+Ruby Version Manager (RVM) 
+http://www.rvm.io/
+* asciidoctor
+asciidoctor sample.adoc 
+asciidoctor -r asciidoctor-diagram sample.adoc 
+asciidoctor-pdf -r asciidoctor-diagram -r asciidoctor-pdf-cjk-kai_gen_gothic -a pdf-style=KaiGenGothicCN sample.adoc 
+asciidoctor -r asciidoctor-diagram -a data-uri sample.adoc 
+
