@@ -23,7 +23,7 @@
 
 == portal认证
 === 流程描述
-[plantuml, diagram-classes, png]
+[plantuml, portal_convert, png]
 ....
 终端 -> Bas: 开始发起http请求
 note left: 连接wifi
