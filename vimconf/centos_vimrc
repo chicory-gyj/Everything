@@ -21,6 +21,9 @@ Plugin 'c.vim'
 Plugin 'winmanager'
 Plugin 'trailing-whitespace'
 Plugin 'align'
+Plugin 'bling/vim-airline'
+Plugin 'altercation/vim-colors-solarized'
+Plugin 'dagwieers/asciidoc-vim'
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -155,8 +158,8 @@ set tabstop=4
 set shiftwidth=4
 set expandtab
 
-nmap <leader>t :cstag<space>
-nmap <leader>c :c<CR>
+"nmap <leader>t :cstag<space>
+"nmap <leader>c :c<CR>
 nmap ,- :Explore<CR>
 nmap ,b :cprevious<CR>
 nmap ,m :Tlist<CR>
@@ -166,6 +169,11 @@ nmap ,q :q<CR>
 nmap <leader>w :WMToggle<CR>
 nmap <leader>o :only<CR>
 nmap <leader>f :find<CR>
+
+nmap <space>[ :tabprevious<CR>
+nmap <space>] :tabNext<CR>
+nmap <space>t :tabedit<space>
+
 nmap <C-j> <C-W>j
 nmap <C-h> <C-W>h
 nmap <C-k> <C-W>k
@@ -175,17 +183,26 @@ nmap <space> :FixWhitespace<CR>
 let g:ctrlp_working_path_mode = 'ra'
 
 set clipboard=unnamedplus
+
 "syntax enable
 "set background=dark
 "colorscheme solarized
 "let g:solarized_termcolors=256
 colorscheme ron
+
 set completeopt=menu
 
 "gvim conf
-set guifont=文泉驿等宽正黑\ Medium\ 14
+set guifont=文泉驿等宽正黑\ Medium\ 12
 if has("gui_running")
-    colorscheme evening
+    set background=dark
+    let g:solarized_termcolors=256
+    colorscheme solarized
+    set guicursor+=n-v-c:blinkon0
 else
 endif
+set laststatus=2
+set relativenumber
 
+let g:airline_theme='solarized'
+let g:airline_solarized_bg='light'
