@@ -5,7 +5,7 @@
 :numbered:
 
 == 文档说明
-适配云平台portal 2.0功能.
+* 适配云平台portal 2.0功能.
 
 === 修改记录
 [width="40%"]
@@ -14,30 +14,32 @@
 | 1.0     | 2015-11-08|方政|
 |====================
 === 编写目的
-1. 运营商设备支持的标准portal 2.0认证方式，是目前云平台所不支持。考虑到云平台固有的认证方式，修改成本较大，所以，产生此模块来适配云平台。
-
+* 运营商设备支持的标准portal 2.0认证方式，是目前云平台所不支持。考虑到云平台固有的认证方式，修改成本较大，所以，产生此模块来适配云平台。
 
 == 需求分析
 === 业务需求
-1. 云营商portal认证需求
+* 云营商portal认证需求
 
 == portal认证
 === 流程描述
 [plantuml, portal_convert, png]
 ....
 终端 -> Bas: 开始发起http请求
-note left: 连接wifi
-Bas --> 终端: 回复http重定向,目的为中间件
+note right: 连接wifi
+Bas --> 终端: 重定向至中间件
 终端 -> 中间件: 第二次发起http请求
+note right: http://中间件ip:8080?acname=&userip=
 中间件 --> 终端: 重定向至云平台
-note right: 报文url转换为云平台格式
+note left: 报文url转换为云平台格式
 终端 -> 云平台: 第三次发起http请求
+note right: http://云平台ip/login?\ngw_id=&gw_address=&gw_port=&url=&\nip=&mac=&apmac=&ssid=&version=&\n<color:red>acname=&userip=</color>
 |||
 云平台 --> 终端: 送出portal页面
-终端 -> 云平台: 输入用户名、密码,提交表单
+终端 -> 云平台: 输入用户名、密码，提交表单
 云平台 --> 终端: 重定向报文至中间件
-note right: 携带用户名、密码(DES加密),token
+note left: 携带<color:red>用户名、密码(DES加密)</color>、token
 终端 -> 中间件: get请求发起portal认证
+note right: http://中间件ip:8060/auth?token=&\n<color:red>acname=&userip=&username=&password=</color>
 |||
 中间件 --> Bas: portal认证开始
 Bas -> 中间件: portal认证结束，认证通过
@@ -47,10 +49,124 @@ Bas -> 中间件: portal认证结束，认证通过
 |||
 中间件 --> 终端: Http重定向至云平台
 终端 -> 云平台: 访问云平台
-note left: 携带gw_id,token
+note right: 携带gw_id,token
 云平台 --> 终端: 认证通过
 ....
 
+* request token check: +
+[source, http]
+GET /cmps/admin.php/api/auth/?stage=login&ip=172.16.222.41&mac=48:74:6e:36:17:2d&token=93230d4f9111b12fd92543cf133618926dd9371e&incoming=0&outgoing=0&gw_id=xb-x86&version=1.0 HTTP/1.0\r\n
+User-Agent: WiFiDog 1.0.0\r\n
+Host: www.example-url.com\r\n
+\r\n
+
+* response auth code: +
+[source, http]
+HTTP/1.1 200 OK\r\n
+Date: Thu, 31 Jul 2014 11:10:40 GMT\r\n
+Expires: Thu, 19 Nov 1981 08:52:00 GMT\r\n
+Cache-Control: private\r\n
+Pragma: no-cache\r\n
+Content-Length: 33\r\n
+Connection: close\r\n
+Content-Type: text/html; charset=utf-8\r\n
+\r\n
+\r\n
+\r\n
+\r\n
+?Auth: 1\n
+0 0 0 0 200 8640
+
+* 认证失败： 中间件将终端重定向到以下URL页面 +
+http://auth_server/cmps/admin/php/api/gw_message.php?message=denied
+
 == 中间件管理
 === 中间件与平台保活流程
+[plantuml, ping_pong, png]
+....
+中间件 -> 云平台: ping
+note right: http://云平台ip/ping/?\ngw_id=&sys_uptime=&sys_memfree=&sys_load=&wifidog_uptime=
+云平台 -> 中间件: pong
+note left: Http Response: pong\\n
+....
+
+流程介绍: +
+网关设备每隔 60 秒主动发送ping保活
+
+* ping request: +
+[source, http]
+GET /cmps/admin.php/api/ping/?gw_id=znj-x86&sys_uptime=267&sys_memfree=3271392&sys_load=0.01&wifidog_uptime=253&res_tpl_version=0&res_product_version=0&res_adver_version=0&userversion=0&totalusernum=0&model=CGW3000&mac=28:51:32:08:f5:2c&version=1.0 HTTP/1.0\r\n
+User-Agent: WiFiDog 1.0.0\r\n
+Host: www.example-url.com\r\n
+\r\n
+
+* pong response: +
+[source, http]
+HTTP/1.1 200 OK\r\n
+Date: Fri, 06 Feb 2015 01:50:58 GMT\r\n
+Expires: Thu, 19 Nov 1981 08:52:00 GMT\r\n
+Cache-Control: private\r\n
+Pragma: no-cache\r\n
+Content-Length: 119\r\n
+Connection: close\r\n
+Content-Type: text/html; charset=utf-8\r\n
+\r\n
+\r\n
+\r\n
+\r\n
+Pong\n
+conf_ver=67\n
+cmd_ver=0\n
+client_num=0\n
+client_list=\n
+res_tpl_version=10\n
+res_product_version=10\n
+res_adver_version=10\n
+soft_ver=www.example-url.com/cmps/static/zip/ver/gw-xa02-1.1.1.0-4886\n
+reboot_delay_time=0
+
+
+=== [black]#平台下发配置流程#
+无
+
+=== [black]#网关下AP信息上报#
+无
+
+== 终端信息
+=== [black]#请求平台在线终端列表#
+无
+
+=== [black]#终端信息上报#
+无
+
+=== 云平台强制下线
+[plantuml, req_offline, png]
+....
+participant Bas
+中间件 <-- 云平台: pong
+note left: 获取用户ip、mac
+中间件 --> Bas: 发起req_logout
+Bas -> 中间件: 发起ack_logout
+....
+
+* 云平台点击下线，云平台发出的 pong response 触发中间件下线
+
+=== 终端无流量下线或者超时下线
+[plantuml, offline, png]
+....
+Bas -> 中间件: ntf_logout
+中间件 -> 云平台: 下线请求
+note right: http://auth_server/auth?stage=logout&\ngw_id=&client_num=&client_list=
+云平台 --> 中间件: 回复成功/失败
+note left: success:0/1
+中间件 -> Bas: ack_logout
+....
+
+=== [black]#当前终端信息获取接口#
+无
+
+=== [black]#用户感知信息上报#
+无
+
+
 

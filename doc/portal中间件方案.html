@@ -446,6 +446,18 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_中间件管理">4. 中间件管理</a>
 <ul class="sectlevel2">
 <li><a href="#_中间件与平台保活流程">4.1. 中间件与平台保活流程</a></li>
+<li><a href="#__span_class_black_平台下发配置流程_span">4.2. <span class="black">平台下发配置流程</span></a></li>
+<li><a href="#__span_class_black_网关下ap信息上报_span">4.3. <span class="black">网关下AP信息上报</span></a></li>
+</ul>
+</li>
+<li><a href="#_终端信息">5. 终端信息</a>
+<ul class="sectlevel2">
+<li><a href="#__span_class_black_请求平台在线终端列表_span">5.1. <span class="black">请求平台在线终端列表</span></a></li>
+<li><a href="#__span_class_black_终端信息上报_span">5.2. <span class="black">终端信息上报</span></a></li>
+<li><a href="#_云平台强制下线">5.3. 云平台强制下线</a></li>
+<li><a href="#_终端无流量下线或者超时下线">5.4. 终端无流量下线或者超时下线</a></li>
+<li><a href="#__span_class_black_当前终端信息获取接口_span">5.5. <span class="black">当前终端信息获取接口</span></a></li>
+<li><a href="#__span_class_black_用户感知信息上报_span">5.6. <span class="black">用户感知信息上报</span></a></li>
 </ul>
 </li>
 </ul>
@@ -455,8 +467,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="sect1">
 <h2 id="_文档说明">1. 文档说明</h2>
 <div class="sectionbody">
-<div class="paragraph">
+<div class="ulist">
+<ul>
+<li>
 <p>适配云平台portal 2.0功能.</p>
+</li>
+</ul>
 </div>
 <div class="sect2">
 <h3 id="_修改记录">1.1. 修改记录</h3>
@@ -485,12 +501,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div class="sect2">
 <h3 id="_编写目的">1.2. 编写目的</h3>
-<div class="olist arabic">
-<ol class="arabic">
+<div class="ulist">
+<ul>
 <li>
 <p>运营商设备支持的标准portal 2.0认证方式，是目前云平台所不支持。考虑到云平台固有的认证方式，修改成本较大，所以，产生此模块来适配云平台。</p>
 </li>
-</ol>
+</ul>
 </div>
 </div>
 </div>
@@ -500,12 +516,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_业务需求">2.1. 业务需求</h3>
-<div class="olist arabic">
-<ol class="arabic">
+<div class="ulist">
+<ul>
 <li>
 <p>云营商portal认证需求</p>
 </li>
-</ol>
+</ul>
 </div>
 </div>
 </div>
@@ -517,8 +533,48 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h3 id="_流程描述">3.1. 流程描述</h3>
 <div class="imageblock">
 <div class="content">
-<img src="portal_convert.png" alt="portal convert" width="920" height="704">
+<img src="portal_convert.png" alt="portal convert" width="1023" height="795">
 </div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>request token check:<br></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-http" data-lang="http">GET /cmps/admin.php/api/auth/?stage=login&amp;ip=172.16.222.41&amp;mac=48:74:6e:36:17:2d&amp;token=93230d4f9111b12fd92543cf133618926dd9371e&amp;incoming=0&amp;outgoing=0&amp;gw_id=xb-x86&amp;version=1.0 HTTP/1.0\r\n
+User-Agent: WiFiDog 1.0.0\r\n
+Host: www.example-url.com\r\n
+\r\n</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>response auth code:<br></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-http" data-lang="http">HTTP/1.1 200 OK\r\n
+Date: Thu, 31 Jul 2014 11:10:40 GMT\r\n
+Expires: Thu, 19 Nov 1981 08:52:00 GMT\r\n
+Cache-Control: private\r\n
+Pragma: no-cache\r\n
+Content-Length: 33\r\n
+Connection: close\r\n
+Content-Type: text/html; charset=utf-8\r\n
+\r\n
+\r\n
+\r\n
+\r\n
+?Auth: 1\n
+0 0 0 0 200 8640</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>认证失败： 中间件将终端重定向到以下URL页面<br>
+<a href="http://auth_server/cmps/admin/php/api/gw_message.php?message=denied" class="bare">http://auth_server/cmps/admin/php/api/gw_message.php?message=denied</a></p>
+</li>
+</ul>
 </div>
 </div>
 </div>
@@ -528,14 +584,130 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_中间件与平台保活流程">4.1. 中间件与平台保活流程</h3>
-
+<div class="imageblock">
+<div class="content">
+<img src="ping_pong.png" alt="ping pong" width="745" height="191">
+</div>
+</div>
+<div class="paragraph">
+<p>流程介绍:<br>
+网关设备每隔 60 秒主动发送ping保活</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>ping request:<br></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-http" data-lang="http">GET /cmps/admin.php/api/ping/?gw_id=znj-x86&amp;sys_uptime=267&amp;sys_memfree=3271392&amp;sys_load=0.01&amp;wifidog_uptime=253&amp;res_tpl_version=0&amp;res_product_version=0&amp;res_adver_version=0&amp;userversion=0&amp;totalusernum=0&amp;model=CGW3000&amp;mac=28:51:32:08:f5:2c&amp;version=1.0 HTTP/1.0\r\n
+User-Agent: WiFiDog 1.0.0\r\n
+Host: www.example-url.com\r\n
+\r\n</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>pong response:<br></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-http" data-lang="http">HTTP/1.1 200 OK\r\n
+Date: Fri, 06 Feb 2015 01:50:58 GMT\r\n
+Expires: Thu, 19 Nov 1981 08:52:00 GMT\r\n
+Cache-Control: private\r\n
+Pragma: no-cache\r\n
+Content-Length: 119\r\n
+Connection: close\r\n
+Content-Type: text/html; charset=utf-8\r\n
+\r\n
+\r\n
+\r\n
+\r\n
+Pong\n
+conf_ver=67\n
+cmd_ver=0\n
+client_num=0\n
+client_list=\n
+res_tpl_version=10\n
+res_product_version=10\n
+res_adver_version=10\n
+soft_ver=www.example-url.com/cmps/static/zip/ver/gw-xa02-1.1.1.0-4886\n
+reboot_delay_time=0</code></pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__span_class_black_平台下发配置流程_span">4.2. <span class="black">平台下发配置流程</span></h3>
+<div class="paragraph">
+<p>无</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__span_class_black_网关下ap信息上报_span">4.3. <span class="black">网关下AP信息上报</span></h3>
+<div class="paragraph">
+<p>无</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_终端信息">5. 终端信息</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="__span_class_black_请求平台在线终端列表_span">5.1. <span class="black">请求平台在线终端列表</span></h3>
+<div class="paragraph">
+<p>无</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__span_class_black_终端信息上报_span">5.2. <span class="black">终端信息上报</span></h3>
+<div class="paragraph">
+<p>无</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_云平台强制下线">5.3. 云平台强制下线</h3>
+<div class="imageblock">
+<div class="content">
+<img src="req_offline.png" alt="req offline" width="255" height="195">
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>云平台点击下线，云平台发出的 pong response 触发中间件下线</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_终端无流量下线或者超时下线">5.4. 终端无流量下线或者超时下线</h3>
+<div class="imageblock">
+<div class="content">
+<img src="offline.png" alt="offline" width="520" height="250">
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__span_class_black_当前终端信息获取接口_span">5.5. <span class="black">当前终端信息获取接口</span></h3>
+<div class="paragraph">
+<p>无</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__span_class_black_用户感知信息上报_span">5.6. <span class="black">用户感知信息上报</span></h3>
+<div class="paragraph">
+<p>无</p>
+</div>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2015-11-11 17:54:59 CST
+Last updated 2015-11-12 18:36:33 CST
 </div>
 </div>
 </body>
