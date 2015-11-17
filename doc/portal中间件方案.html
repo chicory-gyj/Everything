@@ -417,6 +417,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 .hide-for-print{display:none!important}
 .show-for-print{display:inherit!important}}
 </style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
 </head>
 <body class="article toc2 toc-left">
 <div id="header">
@@ -440,7 +441,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#_portal认证">3. portal认证</a>
 <ul class="sectlevel2">
-<li><a href="#_流程描述">3.1. 流程描述</a></li>
+<li><a href="#_portal标准流程">3.1. portal标准流程</a></li>
+<li><a href="#_网关portal流程">3.2. 网关portal流程</a></li>
+<li><a href="#_本方案流程描述">3.3. 本方案流程描述</a></li>
 </ul>
 </li>
 <li><a href="#_中间件管理">4. 中间件管理</a>
@@ -460,6 +463,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#__span_class_black_用户感知信息上报_span">5.6. <span class="black">用户感知信息上报</span></a></li>
 </ul>
 </li>
+<li><a href="#_中间件结构">6. 中间件结构</a>
+<ul class="sectlevel2">
+<li><a href="#_转换bas发出的重定向报文">6.1. 转换Bas发出的重定向报文</a></li>
+<li><a href="#_用户get请求发起portal认证处理">6.2. 用户get请求发起portal认证处理</a></li>
+<li><a href="#_token校验交互">6.3. token校验交互</a></li>
+<li><a href="#_终端下线">6.4. 终端下线</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -467,12 +478,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="sect1">
 <h2 id="_文档说明">1. 文档说明</h2>
 <div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p>适配云平台portal 2.0功能.</p>
-</li>
-</ul>
+<div class="paragraph">
+<p>适配云平台portal 2.0功能</p>
 </div>
 <div class="sect2">
 <h3 id="_修改记录">1.1. 修改记录</h3>
@@ -501,12 +508,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div class="sect2">
 <h3 id="_编写目的">1.2. 编写目的</h3>
-<div class="ulist">
-<ul>
-<li>
+<div class="paragraph">
 <p>运营商设备支持的标准portal 2.0认证方式，是目前云平台所不支持。考虑到云平台固有的认证方式，修改成本较大，所以，产生此模块来适配云平台。</p>
-</li>
-</ul>
 </div>
 </div>
 </div>
@@ -516,12 +519,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_业务需求">2.1. 业务需求</h3>
-<div class="ulist">
-<ul>
-<li>
+<div class="paragraph">
 <p>云营商portal认证需求</p>
-</li>
-</ul>
 </div>
 </div>
 </div>
@@ -530,10 +529,28 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="_portal认证">3. portal认证</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_流程描述">3.1. 流程描述</h3>
+<h3 id="_portal标准流程">3.1. portal标准流程</h3>
 <div class="imageblock">
 <div class="content">
-<img src="portal_convert.png" alt="portal convert" width="1023" height="795">
+<img src="portal_auth.png" alt="portal auth">
+</div>
+<div class="title">Figure 1: Portal 标准流程</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_网关portal流程">3.2. 网关portal流程</h3>
+<div class="imageblock">
+<div class="content">
+<img src="gateway_auth.png" alt="gateway auth">
+</div>
+<div class="title">Figure 2: Gateway 认证流程</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_本方案流程描述">3.3. 本方案流程描述</h3>
+<div class="imageblock">
+<div class="content">
+<img src="portal_convert.png" alt="portal convert" width="1020" height="799">
 </div>
 </div>
 <div class="ulist">
@@ -542,13 +559,29 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>request token check:<br></p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-http" data-lang="http">GET /cmps/admin.php/api/auth/?stage=login&amp;ip=172.16.222.41&amp;mac=48:74:6e:36:17:2d&amp;token=93230d4f9111b12fd92543cf133618926dd9371e&amp;incoming=0&amp;outgoing=0&amp;gw_id=xb-x86&amp;version=1.0 HTTP/1.0\r\n
+<pre class="highlight"><code class="language-http" data-lang="http">GET /cmps/admin.php/api/auth/?stage=login&amp;ip=172.16.222.41&amp;mac=48:74:6e:36:17:2d&amp;token=93230d4f9111b12fd92543cf133618926dd9371e&amp;incoming=0&amp;outgoing=0&amp;gw_id=wlanbas&amp;version=1.0 HTTP/1.0\r\n
 User-Agent: WiFiDog 1.0.0\r\n
 Host: www.example-url.com\r\n
 \r\n</code></pre>
 </div>
 </div>
 </li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+废弃字段：incoming | outgoing | version
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<ul>
 <li>
 <p>response auth code:<br></p>
 <div class="listingblock">
@@ -599,13 +632,29 @@ Content-Type: text/html; charset=utf-8\r\n
 <p>ping request:<br></p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-http" data-lang="http">GET /cmps/admin.php/api/ping/?gw_id=znj-x86&amp;sys_uptime=267&amp;sys_memfree=3271392&amp;sys_load=0.01&amp;wifidog_uptime=253&amp;res_tpl_version=0&amp;res_product_version=0&amp;res_adver_version=0&amp;userversion=0&amp;totalusernum=0&amp;model=CGW3000&amp;mac=28:51:32:08:f5:2c&amp;version=1.0 HTTP/1.0\r\n
+<pre class="highlight"><code class="language-http" data-lang="http">GET /cmps/admin.php/api/ping/?gw_id=wlanbas&amp;sys_uptime=1&amp;sys_memfree=3271392&amp;sys_load=0.01&amp;wifidog_uptime=253&amp;res_tpl_version=0&amp;res_product_version=0&amp;res_adver_version=0&amp;userversion=0&amp;totalusernum=0&amp;model=virturl&amp;mac=28:51:32:08:f5:2c&amp;version=1.0 HTTP/1.0\r\n
 User-Agent: WiFiDog 1.0.0\r\n
 Host: www.example-url.com\r\n
 \r\n</code></pre>
 </div>
 </div>
 </li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+废弃字段: sys_uptime | sys_memfree | sysload | wifidog_uptime | res_tpl_version | res_adver_version | userversion | totalusernum | version
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<ul>
 <li>
 <p>pong response:<br></p>
 <div class="listingblock">
@@ -625,8 +674,8 @@ Content-Type: text/html; charset=utf-8\r\n
 Pong\n
 conf_ver=67\n
 cmd_ver=0\n
-client_num=0\n
-client_list=\n
+client_num=1\n
+client_list=1.1.1.1|aa:aa:aa:aa:aa:aa\n
 res_tpl_version=10\n
 res_product_version=10\n
 res_adver_version=10\n
@@ -636,6 +685,18 @@ reboot_delay_time=0</code></pre>
 </div>
 </li>
 </ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+废弃字段: conf_ver | cmd_ver | res_tpl_version | res_product_version | res_adver_version | soft_ver | reboot_delay_time
+</td>
+</tr>
+</table>
 </div>
 </div>
 <div class="sect2">
@@ -704,10 +765,81 @@ reboot_delay_time=0</code></pre>
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_中间件结构">6. 中间件结构</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>使用 C 语言，监听 tcp端口(8080, 8060, 80), udp端口(50100)，结构如下图：</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="structure.png" alt="structure" width="894" height="347">
+</div>
+</div>
+<div class="sect2">
+<h3 id="_转换bas发出的重定向报文">6.1. 转换Bas发出的重定向报文</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>转换前报文格式:<br>
+<a href="http://中间件ip:8080?acname=&amp;userip=&amp;other=" class="bare">http://中间件ip:8080?acname=&amp;userip=&amp;other=</a></p>
+</li>
+<li>
+<p>转换后报文格式：<br>
+<a href="http://云平台ip/login?gw_id=&amp;gw_address=&amp;gw_port=&amp;url=&amp;ip=&amp;mac=&amp;apmac=&amp;ssid=&amp;version=&amp;acname=&amp;userip=" class="bare">http://云平台ip/login?gw_id=&amp;gw_address=&amp;gw_port=&amp;url=&amp;ip=&amp;mac=&amp;apmac=&amp;ssid=&amp;version=&amp;acname=&amp;userip=</a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_用户get请求发起portal认证处理">6.2. 用户get请求发起portal认证处理</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>提取username和用户密码:<br>
+<a href="http://中间件ip:8060/auth?token=&amp;username=&amp;password=" class="bare">http://中间件ip:8060/auth?token=&amp;username=&amp;password=</a></p>
+</li>
+<li>
+<p>portal认证交互</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_token校验交互">6.3. token校验交互</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>token校验</p>
+</li>
+<li>
+<p>通知Bas认证通过（AFF_ACK）</p>
+</li>
+<li>
+<p>认证完重定向至云平台，携带（token、gw_id）</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_终端下线">6.4. 终端下线</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>收到pong，发起下线</p>
+</li>
+<li>
+<p>收到ntf_logout，发起下线</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2015-11-12 18:36:33 CST
+Last updated 2015-11-16 15:58:29 CST
 </div>
 </div>
 </body>
