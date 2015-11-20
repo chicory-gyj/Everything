@@ -200,3 +200,8 @@ nnoremap <C-n> :call NumberToggle()<cr>
 set laststatus=2
 "let g:airline#extentions#tabline#show_buffers=1
 "let g:airline#extentions#tabline#enabled=1
+
+if has("gui_macvim")
+	 set guifont=Monaco:h15
+     colorscheme ron
+endif
