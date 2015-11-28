@@ -167,6 +167,7 @@ nmap ,m :Tlist<CR>
 nmap ,n :cnext<CR>
 nmap ,f :find<space>
 nmap ,q :q<CR>
+nmap <space><space> :Fix<CR>
 nmap <leader>w :WMToggle<CR>
 nmap <leader>o :only<CR>
 nmap <leader>f :find<CR>
@@ -179,7 +180,6 @@ nmap <C-j> <C-W>j
 nmap <C-h> <C-W>h
 nmap <C-k> <C-W>k
 nmap <C-l> <C-W>l
-nmap <space> :FixWhitespace<CR>
 
 let g:ctrlp_working_path_mode = 'ra'
 

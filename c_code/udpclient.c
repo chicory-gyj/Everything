@@ -19,9 +19,9 @@ int main(int argc, char*argv[])
     struct sockaddr_in addr;
     int addr_len;
     unsigned char msg[56]={0x01,0x01,'n','g',0x88,0x99,0xB1,0x99,0x99,0x9,0x99,0x99,0x99,0x99,0x99,0x99,0x99,0x99,'\0'};
-    char ipstr[20] ={0}; 
+    char ipstr[20] ={0};
 
-    //memcpy(ipstr, argv[1],sizeof(ipstr));  
+    //memcpy(ipstr, argv[1],sizeof(ipstr));
     int i=0;
     if((s=socket(AF_INET,SOCK_DGRAM,0))<0)
     {
@@ -35,7 +35,7 @@ int main(int argc, char*argv[])
         printf("romote ip: %s\n",rip);
         printf("remote port: %d\n",rport);
     }
-    addr_len=sizeof(struct sockaddr_in); 
+    addr_len=sizeof(struct sockaddr_in);
     bzero(&addr,sizeof(addr));
     addr.sin_family=AF_INET;
     addr.sin_port=htons(rport);
@@ -48,21 +48,21 @@ int main(int argc, char*argv[])
     bind(s,(struct sockaddr*)&selfaddr,sizeof(struct sockaddr));
     while(1)
     {
-        //bzero(msg,sizeof(msg));						
-        int aaa = 0;				
-        //          msg[5]='\0';	
-        len= sizeof(msg);					
+        //bzero(msg,sizeof(msg));
+        int aaa = 0;
+        //          msg[5]='\0';
+        len= sizeof(msg);
         aaa=sendto(s,msg,(size_t)len,0,(struct sockaddr*)&addr,addr_len);
         printf("\nInput message: %s len:%d aaa:%d\n error:%d \n",msg,len,aaa,errno);
         memset(msg, 0 ,sizeof(msg));
-        len=recvfrom(s,msg,sizeof(msg),0,&addr,&addr_len);			  								
-        printf("\n%d :\n",i);									       		
+        len=recvfrom(s,msg,sizeof(msg),0,&addr,&addr_len);
+        printf("\n%d :\n",i);
         i++;
 
         printf("\nreceived message: %s \n",msg);
         sleep(1);
-        memset(msg,0, sizeof(msg));  
-        msg[4] = 0xB2;	 
-    }		  	  
+        memset(msg,0, sizeof(msg));
+        msg[4] = 0xB2;
+    }
     return 0;
 }
