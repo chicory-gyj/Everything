@@ -24,7 +24,7 @@ Plugin 'align'
 Plugin 'bling/vim-airline'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'dagwieers/asciidoc-vim'
-Plugin 'autohide'
+Plugin 'ervandew/supertab'
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -180,6 +180,7 @@ nmap <C-j> <C-W>j
 nmap <C-h> <C-W>h
 nmap <C-k> <C-W>k
 nmap <C-l> <C-W>l
+nmap <F12> :redraw<CR>:redrawstatus<CR>
 
 let g:ctrlp_working_path_mode = 'ra'
 
