@@ -43,7 +43,7 @@ print $7;
 $ext = $7;
 if($ext==NULL)
 {
-    $ext=0;
+    $ext="0.00";
 }
 $command =~ /~(\d+)~~~~/;
 $vol = $1/10000;
