@@ -1,2 +1,0 @@
-* apchae编译
-./configure --prefix=/opt/ --with-included-apr --with-pcre=/opt/ --enable-ssl --with-ssl=/opt
