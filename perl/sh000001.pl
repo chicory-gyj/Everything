@@ -58,3 +58,5 @@ $date = `date "+%H:%M"`;
 chomp($date);
 print file $date," ", $vol,"亿 $ext ","+",$delta," ";
 
+
+#we need put it into stock.org
