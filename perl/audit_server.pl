@@ -2,7 +2,7 @@
 
 use IO::Socket;
 $addr = "0.0.0.0";
-$PORT = 9876;
+$PORT = 9000;
 $server = IO::Socket::INET->new(Proto => "tcp",
                                 LocalPort => $PORT,
                                 Listen => 20,
@@ -19,6 +19,10 @@ while ($client = $server->accept())
         $total_len = length $msg;
         print "\nrecv length: ", $total_len,"";
         print "\nrecv: ", unpack("H*", $msg);
+        if($total_len == 0)
+        {
+            break;
+        }
         $count = 0;
         $pos = 0;
         $msg_portion_len = 0;
