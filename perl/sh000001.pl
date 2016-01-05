@@ -59,4 +59,42 @@ chomp($date);
 print file $date," ", $vol,"亿 $ext ","+",$delta," ";
 
 
-#we need put it into stock.org
+
+# end
+# i want save it to stock.org
+
+$stockfile = '~/github/fabius8.github.io/stock/stock.org';
+
+if( -e $stockfile )
+{
+    print "exist stork.org!";
+}
+else
+{
+    goto NOFILE;
+}
+
+open sfile ,">>$stockfile";
+if($time == "0929")
+{
+    $OPEN = $vol;
+    $HOW = $ext;
+    print sfile "| ",$day, " | ",$OPEN, " | ",$HOW, " | ";
+}
+if($time == "1130")
+{
+    $VOL1 = $vol;
+    $EXT1 = $ext;
+    print sfile $VOL1, " | ", $EXT1, " | ";
+}
+if($time == "1500")
+{
+    $VOL2 = $vol;
+    $EXT2 = $ext;
+    print sfile $VOL2, " | ", $EXT2, " | | |\n";
+}
+
+exit;
+
+NOFILE:
+print "no stock file!";
