@@ -63,7 +63,7 @@ print file $date," ", $vol,"亿 $ext ","+",$delta," ";
 # end
 # i want save it to stock.org
 
-$stockfile = '~/github/fabius8.github.io/stock/stock.org';
+$stockfile = '/home/fabius8/github/fabius8.github.io/stock/stock.org';
 
 if( -e $stockfile )
 {
@@ -77,6 +77,7 @@ else
 open sfile ,">>$stockfile";
 if($time == "0929")
 {
+    chomp($day);
     $OPEN = $vol;
     $HOW = $ext;
     print sfile "| ",$day, " | ",$OPEN, " | ",$HOW, " | ";
