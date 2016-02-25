@@ -25,6 +25,7 @@ int get_vlaninfo()
     }                                              
     return 0;                                      
 }                                                  
+
 int analysis_vlan(int vlanin,int *vlanout)        
 {                                                  
     int i = 0;   
