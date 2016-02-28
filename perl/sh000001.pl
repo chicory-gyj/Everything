@@ -63,7 +63,7 @@ print file $date," ", $vol,"亿 $ext ","+",$delta," ";
 # end
 # i want save it to stock.org
 
-$stockfile = '/home/fabius8/github/fabius8.github.io/stock/stock.org';
+$stockfile = '/home/fabius8/github/fabius8.github.io/stock_hp.org';
 
 if( -e $stockfile )
 {
@@ -90,9 +90,11 @@ if($time == "1130")
 }
 if($time == "1500")
 {
+    $week = `date "+%A"`;
+    chomp($week);
     $VOL2 = $vol;
     $EXT2 = $ext;
-    print sfile $VOL2, " | ", $EXT2, " | | |\n";
+    print sfile $VOL2, " | ", $EXT2, " | ",$week ," | |\n";
 }
 
 exit;
