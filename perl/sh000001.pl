@@ -7,7 +7,7 @@ $filename .=".org";
 
 open file ,">>$filename";
 $time = `date "+%H%M"`;
-$day = `date "+%Y.%m.%d"`;
+$day = `date "+%Y-%m-%d"`;
 $hour = `date "+%H"`;
 
 $cmd = `tail -n 1 $filename`;
@@ -63,7 +63,7 @@ print file $date," ", $vol,"亿 $ext ","+",$delta," ";
 # end
 # i want save it to stock.org
 
-$stockfile = '/home/fabius8/github/fabius8.github.io/stock_hp.org';
+$stockfile = '/home/fabius8/github/fabius8.github.io/stock/stock.org';
 
 if( -e $stockfile )
 {
