@@ -1,6 +1,6 @@
 #!/bin/env perl
 
-$org_file = "../../fabius8.github.io/stock/stock.org";
+$org_file = "/home/fabius8/github/fabius8.github.io/stock/stock.org";
 open file, "<", $org_file;
 
 while(<file>)
