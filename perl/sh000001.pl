@@ -80,7 +80,14 @@ if($time == "0929")
     chomp($day);
     $OPEN = $vol;
     $HOW = $ext;
-    print sfile "| ",$day, " | ",$OPEN, " | ",$HOW, " | ";
+    if($OPEN < 10)
+    {
+        print sfile "| ",$day, " | ",$OPEN, " B?", " | ",$HOW, " | ";
+    }
+    else
+    {
+        print sfile "| ",$day, " | ",$OPEN, " | ",$HOW, " | ";
+    }
 }
 if($time == "1130")
 {
@@ -94,7 +101,7 @@ if($time == "1500")
     chomp($week);
     $VOL2 = $vol;
     $EXT2 = $ext;
-    print sfile $VOL2, " | ", $EXT2, " | ",$week ," | |\n";
+    print sfile $VOL2, " | ", $EXT2, " | ",$week ," | ","|\n";
 }
 
 exit;
