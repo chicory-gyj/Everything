@@ -102,6 +102,7 @@ if($time == "1500")
     $VOL2 = $vol;
     $EXT2 = $ext;
     print sfile $VOL2, " | ", $EXT2, " | ",$week ," | ","|\n";
+    result = "emacs $stockfile --batch -l ~/.emacs.d/init.el --eval '(progn(org-table-align))' -f save-buffer --kill"
 }
 
 exit;
