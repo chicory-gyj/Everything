@@ -10,6 +10,9 @@ $time = `date "+%H%M"`;
 $day = `date "+%Y-%m-%d"`;
 $hour = `date "+%H"`;
 
+#test
+$time = "1500";
+
 $cmd = `tail -n 1 $filename`;
 print $cmd;
 $cmd =~ /:(\d+) (\d+)亿 (-?\d+.\d+) \+(\d+) $/;
@@ -18,7 +21,7 @@ if($last == NULL)
 {
     $last =0;
 }
-print "haha ",$2," 11";
+
 if($time == "0915")
 {
     print file "\n* ",$day;
@@ -77,17 +80,12 @@ else
 open sfile ,">>$stockfile";
 if($time == "0929")
 {
+    $week = `date "+%A"`;
+    chomp($week);
     chomp($day);
     $OPEN = $vol;
     $HOW = $ext;
-    if($OPEN < 10)
-    {
-        print sfile "| ",$day, " | ",$OPEN, " B?", " | ",$HOW, " | ";
-    }
-    else
-    {
-        print sfile "| ",$day, " | ",$OPEN, " | ",$HOW, " | ";
-    }
+    print sfile "| ",$day, " | "," $work | ",$OPEN, " | ",$HOW, " | ";
 }
 if($time == "1130")
 {
@@ -97,12 +95,20 @@ if($time == "1130")
 }
 if($time == "1500")
 {
-    $week = `date "+%A"`;
-    chomp($week);
-    $VOL2 = $vol;
-    $EXT2 = $ext;
-    print sfile $VOL2, " | ", $EXT2, " | ",$week ," | ","|\n";
-    result = "emacs $stockfile --batch -l ~/.emacs.d/init.el --eval '(progn(org-table-align))' -f save-buffer --kill"
+    $VOL_SUM = $vol;
+    $EXT_SUM = $ext;
+
+    $GET_LAST = `tail -n 1 $stockfile`;
+    print $GET_LAST;
+    $GET_LAST =~ /\|\s+(-?\d+\.\d+)\s+\|\s+(\d+)\s+\|\s+(-?(\d+)\.(\d+))\s+\|/;
+    $VOL1 = $2;
+    $EXT1 = $3;
+    $VOL2 = $VOL_SUM - $VOL1;
+    $EXT2 = $EXT_SUM - $EXT1;
+    print "\n\n\n";
+    print $VOL1," ", $EXT1;
+    print sfile " ",$VOL2, " | ", $EXT2, " | ",$VOL_SUM," | ",$EXT_SUM ," |\n";
+    $result = `emacs $stockfile --batch -l ~/.emacs.d/init.el --eval '(progn(org-table-align))' -f save-buffer --kill`;
 }
 
 exit;
