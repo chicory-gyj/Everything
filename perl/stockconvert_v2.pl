@@ -1,5 +1,5 @@
 #!/bin/env perl
-$stockid = "sz399001";
+$stockid = "sz399006";
 $filename = "/samba/";
 $stockfile = "/samba/";
 
