@@ -1,8 +1,14 @@
 #!/bin/env perl
-$filename = "/samba/sz399001.org";
+$stockid = "sz399001";
+$filename = "/samba/";
+$stockfile = "/samba/";
+
+$filename .= $stockid;
+$filename .= ".org";
 open file ,"<","$filename";
 
-$stockfile = '/home/fabius8/github/fabius8.github.io/stock/stock.org';
+$stockfile .= $stockid;
+$stockfile .= "_cov.org";
 open sfile ,">>$stockfile";
 
 while(<file>)
@@ -19,7 +25,15 @@ while(<file>)
         chomp;
         $_ =~ /09:29 (\d+)亿 ((-?)(\d+).(\d+)) .* 11:30 (\d+)亿 ((-?)(\d+).(\d+)) .* 15:00 (\d+)亿 ((-?)(\d+).(\d+))/;
         print $1," ", $2, " ", $6, " ", $7, " ", $11, " ", $12 ;
-        print sfile $1, " | ",$2, " | ", $6, " | ", $7, " | ", $11," | ", $12, " | ", " | |\n";
+        $VOL0 = $1;
+        $EXT0 = $2;
+        $VOL1 = $6;
+        $EXT1 = $7;
+        $VOL2 = $11 - $6;
+        $EXT2 = $12 - $7;
+        $VOLSUM = $11;
+        $EXTSUM = $12;
+        print sfile $VOL0, " | ",$EXT0, " | ", $VOL1, " | ", $EXT1, " | ", $VOL2," | ", $EXT2, " | ", $VOLSUM," | ", $EXTSUM," |\n";
         print "\n";
     }
 }
