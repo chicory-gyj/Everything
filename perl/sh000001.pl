@@ -10,8 +10,6 @@ $time = `date "+%H%M"`;
 $day = `date "+%Y-%m-%d"`;
 $hour = `date "+%H"`;
 
-#test
-$time = "1500";
 
 $cmd = `tail -n 1 $filename`;
 print $cmd;
@@ -105,6 +103,7 @@ if($time == "1500")
     $EXT1 = $3;
     $VOL2 = $VOL_SUM - $VOL1;
     $EXT2 = $EXT_SUM - $EXT1;
+    $EXT2 = sprintf "%.2f",$EXT2;
     print "\n\n\n";
     print $VOL1," ", $EXT1;
     print sfile " ",$VOL2, " | ", $EXT2, " | ",$VOL_SUM," | ",$EXT_SUM ," |\n";
