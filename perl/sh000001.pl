@@ -83,7 +83,7 @@ if($time == "0929")
     chomp($day);
     $OPEN = $vol;
     $HOW = $ext;
-    print sfile "| ",$day, " | "," $work | ",$OPEN, " | ",$HOW, " | ";
+    print sfile "| ",$day, " | ",$work," | ",$OPEN, " | ",$HOW, " | ";
 }
 if($time == "1130")
 {
