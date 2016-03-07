@@ -18,4 +18,10 @@ int main(int argc, char **argv){
     unsigned char mac[6];
     sscanf("11:11:11:11:11:11", MAC_FMT, MAC_ARG_S(mac));
     printf(MAC_FMT, MAC_ARG(mac));
+    char string[10] = "op=";
+    int ii;
+    int result;
+    result = sscanf(string, "op=%d", ii);
+    printf("result = %d\n", result);
+    printf("i= %d\n", ii);
 }
