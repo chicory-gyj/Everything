@@ -21,7 +21,7 @@ int main(int argc, char **argv){
     char string[10] = "op=22";
     int ii;
     int result;
-    result = sscanf(string, "op=%d", ii);
+    result = sscanf(string, "op=%d", &ii);
     printf("result = %d\n", result);
     printf("i= %d\n", ii);
 }
