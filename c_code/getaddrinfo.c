@@ -10,7 +10,7 @@ int main()
 {
     struct addrinfo *result;
     struct addrinfo *rp;
-    char *hostname = "www.baidu.com";
+    char *hostname = "tcpconn2.tencent.com";
     int ret;
 
     ret = getaddrinfo(hostname, NULL, NULL, &result);
