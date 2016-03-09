@@ -10,6 +10,7 @@ int main()
 {
     struct addrinfo *result;
     struct addrinfo *rp;
+    struct sockaddr_in *ip;
     char *hostname = "www.baidu.com";
     int ret;
 
@@ -22,7 +23,7 @@ int main()
 
     for(rp = result; rp != NULL; rp = rp->ai_next)
     {
-        struct sockaddr_in *ip = (struct sockaddr_in *)(rp->ai_addr);
+        ip = (struct sockaddr_in *)(rp->ai_addr);
         printf("ip:%u\n", ip->sin_addr.s_addr);
         char ipAddress[INET_ADDRSTRLEN];
         inet_ntop(AF_INET, &(ip->sin_addr), ipAddress, INET_ADDRSTRLEN);
