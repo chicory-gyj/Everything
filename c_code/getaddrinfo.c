@@ -11,7 +11,7 @@ int main()
     struct addrinfo hints;
     struct addrinfo *result;
     struct addrinfo *rp;
-    char *hostname = "www.baidu.com";
+    char *hostname = "baidu.com";
     int ret;
 
     memset(&hints, 0, sizeof(struct addrinfo));
