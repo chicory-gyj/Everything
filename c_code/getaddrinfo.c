@@ -10,7 +10,6 @@ int main()
 {
     struct addrinfo *result;
     struct addrinfo *rp;
-    struct sockaddr_in *ip;
     char *hostname = "www.baidu.com";
     int ret;
 
@@ -18,9 +17,9 @@ int main()
     if(ret != 0)
     {
         fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(ret));
-        exit(1);
     }
 
+    struct sockaddr_in *ip;
     for(rp = result; rp != NULL; rp = rp->ai_next)
     {
         ip = (struct sockaddr_in *)(rp->ai_addr);
