@@ -16,7 +16,7 @@ int main()
 
     memset(&hints, 0, sizeof(struct addrinfo));
     hints.ai_family = AF_UNSPEC;    /*  Allow IPv4 or IPv6 */
-    hints.ai_socktype = 1; /*  Datagram socket */
+    hints.ai_socktype = SOCK_STREAM;/*  Datagram socket */
     hints.ai_flags = AI_PASSIVE;    /*  For wildcard IP address */
     hints.ai_protocol = 0;          /*  Any protocol */
     hints.ai_canonname = NULL;
