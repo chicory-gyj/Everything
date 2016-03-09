@@ -22,12 +22,24 @@ int main()
     struct sockaddr_in *ip;
     for(rp = result; rp != NULL; rp = rp->ai_next)
     {
-        ip = (struct sockaddr_in *)(rp->ai_addr);
-        printf("ip:%u\n", ip->sin_addr.s_addr);
-        char ipAddress[INET_ADDRSTRLEN];
-        inet_ntop(AF_INET, &(ip->sin_addr), ipAddress, INET_ADDRSTRLEN);
+        if(rp->ai_protocol == IPPROTO_UDP)
+        {
+            ip = (struct sockaddr_in *)(rp->ai_addr);
+            printf("udp ip:%u\n", ip->sin_addr.s_addr);
+            char ipAddress[INET_ADDRSTRLEN];
+            inet_ntop(AF_INET, &(ip->sin_addr), ipAddress, INET_ADDRSTRLEN);
 
-        printf("The IP address is: %s\n", ipAddress);
+            printf("The IP address is: %s\n", ipAddress);
+        }
+        if(rp->ai_protocol == IPPROTO_TCP)
+        {
+            ip = (struct sockaddr_in *)(rp->ai_addr);
+            printf("tcp ip:%u\n", ip->sin_addr.s_addr);
+            char ipAddress[INET_ADDRSTRLEN];
+            inet_ntop(AF_INET, &(ip->sin_addr), ipAddress, INET_ADDRSTRLEN);
+
+            printf("The IP address is: %s\n", ipAddress);
+        }
     }
 
     freeaddrinfo(result);
