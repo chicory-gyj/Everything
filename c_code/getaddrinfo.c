@@ -25,7 +25,12 @@ int main()
 
     for(rp = result; rp != NULL; rp = rp->ai_next)
     {
-        printf("ip:%d",rp->ai_addr);
+        struct sockaddr_in *ip = (struct sockaddr_in *)(rp->ai_addr);
+        printf("ip:%d", ip->sin_addr);
+        char ipAddress[INET_ADDRSTRLEN];
+        inet_ntop(AF_INET, &(ip->sin_addr), ipAddress, INET_ADDRSTRLEN);
+
+        printf("The IP address is: %s\n", ipAddress);
     }
 
     if(rp == NULL)
