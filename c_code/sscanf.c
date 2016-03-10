@@ -33,4 +33,11 @@ int main(int argc, char **argv){
     char *temp = (char *)malloc(strlen(item));
     sscanf(item, "op=%s", temp);
     printf("op=%s",temp);
+
+
+    char *haha;
+    haha = (char *)malloc(sizeof(haha));
+    memset(haha, 0, sizeof(haha));
+    if(haha)
+    printf("\nhaha =%s\n", haha);
 }
