@@ -7,6 +7,10 @@
 #endif
 
 #define MAC_ARG_S(x)  (&((x)[0])),(&((x)[1])),(&((x)[2])),(&((x)[3])),(&((x)[4])),(&((x)[5]))
+typedef struct
+{
+    char *acl;
+}LIST;
 
 
 int main(int argc, char **argv){
@@ -40,4 +44,9 @@ int main(int argc, char **argv){
     memset(haha, 0, sizeof(haha));
     if(haha)
     printf("\nhaha =%s\n", haha);
+
+    LIST *aaa;
+    aaa = (LIST *)malloc(sizeof(LIST));
+    memset(aaa, 0, sizeof(LIST));
+    printf("acl = %s", aaa->acl);
 }
