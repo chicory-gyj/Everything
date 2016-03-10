@@ -19,4 +19,8 @@ int main()
     printf("cmp1: %d\n", ii);
     ii = memcmp(&itest, aucip, 4);
     printf("cmp2: %d\n", ii);
+
+    struct in_addr aa;
+    aa.s_addr = 3078823535;
+    printf("%s\n",inet_ntoa(aa));
 }
