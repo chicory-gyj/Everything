@@ -18,8 +18,8 @@ int main(int argc, char **argv){
     unsigned char mac[6];
     sscanf("11:11:11:11:11:11", MAC_FMT, MAC_ARG_S(mac));
     printf(MAC_FMT, MAC_ARG(mac));
-    char string[10] = "op=22";
-    int ii;
+    char string[10] = "op=";
+    int ii = 0;
     int result;
     result = sscanf(string, "op=%d", &ii);
     printf("result = %d\n", result);
@@ -28,4 +28,9 @@ int main(int argc, char **argv){
     char *dns = "*";
     unsigned char xi = sscanf(dns, "%hhu", &xi);
     printf("xi:%d\n", xi);
+
+    char *item = "op=";
+    char *temp = (char *)malloc(strlen(item));
+    sscanf(item, "op=%s", temp);
+    printf("op=%s",temp);
 }
