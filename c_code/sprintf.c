@@ -1,0 +1,28 @@
+/*
+ * =====================================================================================
+ *
+ *       Filename:  sprintf.c
+ *
+ *    Description:  
+ *
+ *        Version:  1.0
+ *        Created:  03/10/2016 08:06:33 PM
+ *       Revision:  none
+ *       Compiler:  gcc
+ *
+ *         Author:  YOUR NAME (), 
+ *   Organization:  
+ *
+ * =====================================================================================
+ */
+#include <stdlib.h>
+int main()
+{
+    int port = 0;
+    char string[128] = {0};
+    int plus = 0;
+    plus += sprintf(string, port?"1 %d":"%d", port?port:0);
+    printf("plus: %d\n", plus);
+    printf("string: %s\n", string);
+}
+
