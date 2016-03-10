@@ -21,7 +21,9 @@ int main()
     int port = 0;
     char string[128] = {0};
     int plus = 0;
-    plus += sprintf(string, port?"1 %d":"", port?port:0);
+    plus += sprintf(&string[plus], port?" \
+            1 %d": \
+            "", port?port:0);
     printf("plus: %d\n", plus);
     printf("string: %s\n", string);
 }
