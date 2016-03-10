@@ -22,5 +22,6 @@ int main()
 
     struct in_addr aa;
     aa.s_addr = 3078823535;
-    printf("%s\n",inet_ntoa(aa));
+    int ii = 3078823535;
+    printf("%s\n",inet_ntoa((struct in_addr)ii));
 }
