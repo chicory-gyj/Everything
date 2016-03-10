@@ -24,4 +24,8 @@ int main(int argc, char **argv){
     result = sscanf(string, "op=%d", &ii);
     printf("result = %d\n", result);
     printf("i= %d\n", ii);
+
+    char *dns = "*";
+    unsigned char xi = sscanf(dns, "%hhu", &xi);
+    printf("xi:%d\n", xi);
 }
