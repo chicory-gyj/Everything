@@ -1,4 +1,11 @@
+#include <pcap.h>
+#include <stdio.h>
 #define __init __attribute__ ((constructor(101)))
+
+int loc_pa_tuniu(const struct iphdr *pstIphdr, unsigned short usIphdrlen, const unsigned char *pkt, unsigned short len)
+{
+
+}
 void __init init()
 {
     printf("start...\n");
@@ -29,14 +36,6 @@ void callback(u_char *userless, const struct pcap_pkthdr* pkthdr, const u_char* 
                     printf("Invalid TCP head-length %u bytes", tcp_head);
                     return -1;
                 }
-                int data_len = ntohs(ip->ip_len) - ip_head - tcp_head;
-                char *data = (unsigned char *)tcp + tcp_head;
-                int dport =  ntohs(tcp->th_dport);
-                if((dport == 80))
-                {
-                    
-                }
-
             }
             break;
     }
