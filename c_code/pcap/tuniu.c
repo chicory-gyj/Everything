@@ -2,6 +2,7 @@
 #include <stdio.h>
 #define __init __attribute__ ((constructor(101)))
 
+typedef unsigned int UINT16;
 int loc_pa_tuniu(const struct iphdr *pstIphdr, unsigned short usIphdrlen, const unsigned char *pkt, unsigned short len)
 {
 
@@ -13,31 +14,25 @@ void __init init()
 void callback(u_char *userless, const struct pcap_pkthdr* pkthdr, const u_char* packet)
 {
     const struct ethhdr *ethernet = NULL;  /* The ethernet header [1] */
-    const struct packet_ip *ip;
+    const struct iphdr *pstIphdr;
     const struct packet_tcp *tcp;
+    UINT16 usIphdrlen;
 
     ethernet = (struct ethhdr*)(packet);
     switch(htons(ethernet->ether_type))
     {
-        case 0X0800:
-            ip = (struct packet_ip*)(packet + SIZE_ETHERNET);
-            ip_head = IP_HL(ip)*4;
-            if(ip_head < 20)
-            {
-                printf("无效的IP头长度: %u bytes", ip_head);
-                return -1;
-            }
-            if(ip->ip_p == IPPROTO_TCP)
-            {
-                tcp = (struct packet_tcp*)(packet + SIZE_ETHERNET + ip_head);
-                tcp_head = TH_OFF(tcp)*4;
-                if (tcp_head < 20)
-                {
-                    printf("Invalid TCP head-length %u bytes", tcp_head);
-                    return -1;
-                }
-            }
+        case ETH_P_IP:
+            pstIphdr = (struct iphdr*)(packet + sizeof(struct ethhdr));
             break;
+        case ETH_P_8021Q:
+            pstIphdr = (struct iphdr*)(packet + sizeof(struct ethhdr) + 2);
+            break;
+        default:
+            break;
+    }
+    usIphdrlen = (ip->ihl<<2);
+    if(0 == loc_pa_wechat(pstIphdr, usIphdrlen, packet, pkthdr->caplen))
+    {
     }
 }
 
