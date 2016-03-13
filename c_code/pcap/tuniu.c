@@ -5,7 +5,35 @@
 typedef unsigned int UINT16;
 int loc_pa_tuniu(const struct iphdr *pstIphdr, unsigned short usIphdrlen, const unsigned char *pkt, unsigned short len)
 {
+    const unsigned char *uiIpData;
+    const struct ethhdr *pstEthhdr = NULL;
+    const struct tcphdr *pstTcphdr = NULL;
+    unsigned short tcphdrlen;
+    const unsigned char *pTcpData = NULL;
+    unsigned short usTcpDataLen;
+    unsigned short dport, sport;
 
+    if (NULL == pstIphdr || NULL == pkt )
+    {
+        return -1;
+    }
+
+    if (IP_T_TCP != pstIphdr->protocol) {
+        return -1;
+    }
+
+    pstEthhdr = (struct ethhdr *)pkt;
+    uiIpData = (unsigned char *)pstIphdr + usIphdrlen;
+    pstTcphdr = (struct tcphdr *)uiIpData;
+    tcphdrlen = pstTcphdr->doff << 2;
+    pTcpData = ((unsigned char *)pstTcphdr + tcphdrlen);
+    usTcpDataLen = ntohs(pstIphdr->tot_len) - usIphdrlen - tcphdrlen;
+
+    dport = ntohs(pstTcphdr->dest);
+    sport = ntohs(pstTcphdr->source);
+    if(dport == 80)
+    {
+    }
 }
 void __init init()
 {
@@ -31,7 +59,7 @@ void callback(u_char *userless, const struct pcap_pkthdr* pkthdr, const u_char* 
             break;
     }
     usIphdrlen = (ip->ihl<<2);
-    if(0 == loc_pa_wechat(pstIphdr, usIphdrlen, packet, pkthdr->caplen))
+    if(0 == loc_pa_tuniu(pstIphdr, usIphdrlen, packet, pkthdr->caplen))
     {
     }
 }
