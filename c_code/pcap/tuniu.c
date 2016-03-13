@@ -12,11 +12,11 @@ void __init init()
 }
 void callback(u_char *userless, const struct pcap_pkthdr* pkthdr, const u_char* packet)
 {
-    const struct packet_ethernet *ethernet = NULL;  /* The ethernet header [1] */
+    const struct ethhdr *ethernet = NULL;  /* The ethernet header [1] */
     const struct packet_ip *ip;
     const struct packet_tcp *tcp;
 
-    ethernet = (struct packet_ethernet*)(packet);
+    ethernet = (struct ethhdr*)(packet);
     switch(htons(ethernet->ether_type))
     {
         case 0X0800:
