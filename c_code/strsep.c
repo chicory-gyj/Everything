@@ -3,11 +3,11 @@
 
 int main()
 {
-    char client_list[1024] = "172.168.1.1|11:11:11:11:11;123|456";
+    char client_list[1024] = "1 72.168.1.1|11:11:11:11:11;123|456";
     char *client_list_copy = strdup(client_list);
     char *item;
     char *ip_string;
-    while((item = strsep(&client_list_copy, ";")))
+    while((item = strsep(&client_list, ";")))
     {
         if((ip_string = strsep(&item, "|")))
         {
