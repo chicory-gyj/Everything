@@ -31,8 +31,9 @@ int loc_pa_tuniu(const struct iphdr *pstIphdr, unsigned short usIphdrlen, const 
 
     dport = ntohs(pstTcphdr->dest);
     sport = ntohs(pstTcphdr->source);
-    if(dport == 80)
+    if(dport != 80)
     {
+        return 0;
     }
 }
 void __init init()
