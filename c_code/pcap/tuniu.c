@@ -1,8 +1,16 @@
 #include <pcap.h>
 #include <stdio.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <linux/ip.h>
+#include <linux/tcp.h>
+#include <linux/if_ether.h>
 #define __init __attribute__ ((constructor(101)))
 
 typedef unsigned int UINT16;
+/* 1. 端口：80
+ * 2. GET /__utm.gif?u中的utmp字段包含该虚拟id
+ * */
 int loc_pa_tuniu(const struct iphdr *pstIphdr, unsigned short usIphdrlen, const unsigned char *pkt, unsigned short len)
 {
     const unsigned char *uiIpData;
@@ -12,13 +20,14 @@ int loc_pa_tuniu(const struct iphdr *pstIphdr, unsigned short usIphdrlen, const 
     const unsigned char *pTcpData = NULL;
     unsigned short usTcpDataLen;
     unsigned short dport, sport;
+    const unsigned char *pucMac = NULL;
 
     if (NULL == pstIphdr || NULL == pkt )
     {
         return -1;
     }
 
-    if (IP_T_TCP != pstIphdr->protocol) {
+    if (6 != pstIphdr->protocol) {
         return -1;
     }
 
@@ -35,6 +44,24 @@ int loc_pa_tuniu(const struct iphdr *pstIphdr, unsigned short usIphdrlen, const 
     {
         return 0;
     }
+    pucMac = pstEthhdr->h_dest;
+    char vid[64] = {0};
+    char *tuniu_dup = pTcpData;
+    char *item;
+    /* ios 和 andriod */
+    if(!strncmp(tuniu_dup, "GET /__utm.gif", strlen("GET /__utm.gif")))
+    {
+        while((item = strsep(&tuniu_dup, "&")))
+        {
+            if(strstr(item, "utmp="))
+            {
+                printf("utmp:%s\n", item);
+                item = item + (strlen(item) - 10);
+                item = strstr(item ,"F");
+                printf("vid:%s\n", item + 1);
+            }
+        }
+    }
 }
 void __init init()
 {
@@ -44,11 +71,10 @@ void callback(u_char *userless, const struct pcap_pkthdr* pkthdr, const u_char* 
 {
     const struct ethhdr *ethernet = NULL;  /* The ethernet header [1] */
     const struct iphdr *pstIphdr;
-    const struct packet_tcp *tcp;
     UINT16 usIphdrlen;
 
     ethernet = (struct ethhdr*)(packet);
-    switch(htons(ethernet->ether_type))
+    switch(htons(ethernet->h_proto))
     {
         case ETH_P_IP:
             pstIphdr = (struct iphdr*)(packet + sizeof(struct ethhdr));
@@ -59,7 +85,7 @@ void callback(u_char *userless, const struct pcap_pkthdr* pkthdr, const u_char* 
         default:
             break;
     }
-    usIphdrlen = (ip->ihl<<2);
+    usIphdrlen = (pstIphdr->ihl<<2);
     if(0 == loc_pa_tuniu(pstIphdr, usIphdrlen, packet, pkthdr->caplen))
     {
     }
