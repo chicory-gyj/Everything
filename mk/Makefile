@@ -8,4 +8,8 @@ all : $(OBJS)
 	@echo $<
 	@echo $*
 
-%.o:%.c
+%.o : %.c
+	@echo $* "\%\*"
+
+clean: 
+	rm -rf $(OBJS)
