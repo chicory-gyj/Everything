@@ -1,7 +1,10 @@
-all : aaa bbb
-	@echo $@
+SRCS      = $(wildcard *.c)
+OBJS      = $(patsubst %.c, %.o, $(SRCS))
+
+all : $(OBJS)
+	@echo $@ "\$\@"
 	@echo $^
 	@echo $%
 	@echo $<
-aaa:
-bbb:
+
+$(OBJS):$(SRCS)
