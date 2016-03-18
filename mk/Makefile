@@ -6,5 +6,6 @@ all : $(OBJS)
 	@echo $^
 	@echo $%
 	@echo $<
+	@echo $*
 
 $(OBJS):$(SRCS)
