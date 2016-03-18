@@ -8,4 +8,4 @@ all : $(OBJS)
 	@echo $<
 	@echo $*
 
-$(OBJS):$(SRCS)
+%.o:%.c
