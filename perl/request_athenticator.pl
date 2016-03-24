@@ -20,14 +20,17 @@ $password1 = "cmedia";
 );
 $msg_pack2 = pack("C*", @msg2);
 $password2 = "123456";
-print unpack("H*", $msg_pack2);
+
+print "msg:  ";
+print unpack("H*", $msg_pack1);
 
 print "\n";
-print unpack("H*", $password2);
+print "password: ", $password1;
 
 $all = $msg_pack1;
 $all .= $password1;
 $authenticator = md5($all);
 
 print "\n";
+print "authenticator:  ";
 print unpack("H*", $authenticator);
