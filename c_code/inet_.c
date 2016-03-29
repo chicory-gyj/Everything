@@ -21,7 +21,6 @@ int main()
     printf("cmp2: %d\n", ii);
 
     struct in_addr aa;
-    aa.s_addr = 3078823535;
-    int ii = 3078823535;
-    printf("%s\n",inet_ntoa((struct in_addr)ii));
+    aa.s_addr = 3663623658;
+    printf("%s\n",inet_ntoa(aa));
 }
