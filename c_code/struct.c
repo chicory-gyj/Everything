@@ -4,7 +4,8 @@ struct stu
     int bb;
     int cc;
     int dd;
-}
+};
+
 int main()
 {
     struct stu mimi;
@@ -15,12 +16,12 @@ int main()
 
     struct stu *bb;
     bb = (struct stu *)&mimi;
-    printf("aa:%\n"
+    printf("aa:%d\n"
             "bb:%d\n"
             "cc:%d\n"
             "dd:%d\n",
-            bb.aa,
-            bb.bb,
-            bb.cc,
-            bb.dd);
+            bb->aa,
+            bb->bb,
+            bb->cc,
+            bb->dd);
 }
