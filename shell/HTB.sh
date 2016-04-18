@@ -1,6 +1,6 @@
 #!/bin/bash
 # The Ultimate Setup For Your Internet Connection At Home
-# 
+#
 #
 # Set the following values to somewhat less than your actual download
 # and uplink speed. In kilobits
@@ -28,7 +28,7 @@ tc qdisc del dev $DEV ingress 2> /dev/null > /dev/null
 #tc class add dev $DEV parent 1:1 classid 1:10 htb rate ${UPLINK}kbit \
 #   burst 6k prio 1
 
-# bulk & default class 1:20 - gets slightly less traffic, 
+# bulk & default class 1:20 - gets slightly less traffic,
 # and a lower priority:
 
 #tc class add dev $DEV parent 1:1 classid 1:20 htb rate $[9*$UPLINK/10]kbit \
@@ -42,7 +42,7 @@ tc qdisc del dev $DEV ingress 2> /dev/null > /dev/null
 #tc filter add dev $DEV parent 1:0 protocol ip prio 10 u32 \
 #      match ip tos 0x10 0xff  flowid 1:10
 
-# ICMP (ip protocol 1) in the interactive class 1:10 so we 
+# ICMP (ip protocol 1) in the interactive class 1:10 so we
 # can do measurements & impress our friends:
 #tc filter add dev $DEV parent 1:0 protocol ip prio 10 u32 \
 #    match ip protocol 1 0xff flowid 1:10
@@ -61,7 +61,7 @@ tc qdisc del dev $DEV ingress 2> /dev/null > /dev/null
 
 
 ########## downlink #############
-# slow downloads down to somewhat less than the real speed  to prevent 
+# slow downloads down to somewhat less than the real speed  to prevent
 # queuing at our ISP. Tune to see how high you can set it.
 # ISPs tend to have *huge* queues to make sure big downloads are fast
 #
@@ -73,5 +73,5 @@ tc qdisc add dev $DEV handle ffff: ingress
 # coming in too fast:
 
 tc filter add dev $DEV parent ffff: protocol ip prio 50 u32 match ip src \
-   0.0.0.0/0 police rate ${DOWNLINK}kbit burst 50k drop flowid :1
+   0.0.0.0/0 police rate ${DOWNLINK}kbit burst 30k drop flowid :1
 
