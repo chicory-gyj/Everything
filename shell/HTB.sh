@@ -76,5 +76,5 @@ tc qdisc add dev $DEV handle ffff: ingress
 #   0.0.0.0/0 police rate ${DOWNLINK}kbit burst 30k drop flowid :1
 
 tc filter add dev $DEV parent ffff: protocol ip prio 50 u32 match ip src \
-   0.0.0.0/0 police rate ${DOWNLINK}kbit ceil 800kbit drop flowid :1
+   0.0.0.0/0 police rate ${DOWNLINK}kbit burst 20k drop flowid :1
 
