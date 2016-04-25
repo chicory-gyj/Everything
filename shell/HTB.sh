@@ -4,13 +4,13 @@
 #
 # Set the following values to somewhat less than your actual download
 # and uplink speed. In kilobits
-DOWNLINK=800
-UPLINK=220
+DOWNLINK=8000
+UPLINK=2200
 DEV=eth0
 
 # clean existing down- and uplink qdiscs, hide errors
 #tc qdisc del dev $DEV root    2> /dev/null > /dev/null
-tc qdisc del dev $DEV ingress 2> /dev/null > /dev/null
+tc qdisc del dev $DEV ingress 2> /dev/null
 
 ###### uplink
 
