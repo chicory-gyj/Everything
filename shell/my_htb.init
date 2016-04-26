@@ -25,14 +25,17 @@ htb_device_off ()
 ### 对用户上行进行流控配置
 htb_ingress_add ()
 {
-    if [ ${UPLOAD} == "" ]
-        return 1;
+    if [ ! "${UPLOAD}" ];then
+        return 1
     fi
     echo "ingress add $IP"
-    tc filter add dev $device parent ffff: protocol ip \
+    tc filter replace dev $device parent ffff: protocol ip \
         prio 50 u32 \
         match ip src $IP police rate ${UPLOAD}kbit burst ${BUSRT}K \
         drop flowid :1
+    if [ $? -ne 0 ]; then
+        htb_failure "htb_init ingress add IP=$IP FAIL!"
+    fi
 } # htb_ingress_add
 
 ### 对用户上行进行流控配置
