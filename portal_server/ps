@@ -151,6 +151,10 @@ my ( $ucVer, $ucType, $ucAuthType, $ucRsv, $usSerialNo, $usReqID,
 ( $ucVer, $ucType, $ucAuthType, $ucRsv, $usSerialNo, $usReqID,
     $aucUserIP[0],$aucUserIP[1],$aucUserIP[2],$aucUserIP[3], $usUserPort, $ucErrCode, $ucAttrNum, $ATTR ) = 
     unpack("C C C C n n C4 n C C C*", $ack_challenge );
+if($ucErrCode != 0)
+{
+	goto FAIL;
+}
 my ( $challenge_id, $chappassword, $data);
 if($ucVer == 2)
 {
@@ -238,7 +242,7 @@ my($ackauth_ucVer, $ackauth_ucType, $ackauth_ucAuthType, $ackauth_ucRsv, $ackaut
     @ackauth_aucUserIP, $ackauth_usUserPort, $ackauth_ucErrCode, $ackauth_ucAttrNum);
 
 ($ackauth_ucVer, $ackauth_ucType, $ackauth_ucAuthType, $ackauth_ucRsv, $ackauth_usSerialNo, $ackauth_usReqID,
-    @ackauth_aucUserIP, $ackauth_usUserPort, $ackauth_ucErrCode, $ackauth_ucAttrNum) = unpack("C C C C n n C4 n C C", $ack_auth);
+    $ackauth_aucUserIP[0],$ackauth_aucUserIP[1],$ackauth_aucUserIP[2],$ackauth_aucUserIP[3], $ackauth_usUserPort, $ackauth_ucErrCode, $ackauth_ucAttrNum) = unpack("C C C C n n C4 n C C", $ack_auth);
 
 if($ackauth_ucErrCode == 0)
 {
