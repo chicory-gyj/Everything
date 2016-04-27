@@ -1,0 +1,235 @@
+#!/bin/bash
+#
+#   Copyright (C) 2016 GBCOM fangzheng@gbcom.com.cn
+#
+
+device=${device:-eth0}
+#DOWNLOAD=${DOWNLOAD:-100}
+#UPLOAD=${UPLOAD:-100}
+BUSRT=30
+SUBNET=
+INGRESS_MATCH=
+
+### IP转换10进制
+ip2dec ()
+{
+    local a b c d ip=$@
+    IFS=. read -r a b c d <<< "$ip"
+    printf '%d' "$((a * 256 ** 3 + b * 256 ** 2 + c * 256 + d))"
+} # ip2dec
+
+### 10进制转换16进制
+dec2hex ()
+{
+    printf '%08x' $@
+}
+
+### IP转换16进制
+ip2hex ()
+{
+    local a b c d ip=$@
+    IFS=. read -r a b c d <<< "$ip"
+    printf '%02x%02x%02x%02x' "$a" "$b" "$c" "$d"
+} #ip2hex
+
+### 打印信息
+htb_message ()
+{
+    echo "** HTB: $@"
+} # htb_message
+
+### 打印信息并退出
+htb_failure_exit ()
+{
+    echo "** HTB: $@"
+    exit 1
+} # htb_failure_exit
+
+
+### 删除流控配置
+htb_device_off ()
+{
+    tc qdisc del dev $device root 2> /dev/null
+    tc qdisc del dev $device ingress 2> /dev/null
+} # htb_device_off
+
+### 对用户上行增加流控配置
+htb_ingress_add ()
+{
+    if [ ! "${UPLOAD}" ];then
+        return 1
+    fi
+    htb_ingress_match_ip_from_config
+    # 如果有重复配置，先删除原来配置
+    if [ "$INGRESS_MATCH" ];then
+        echo "ingress del handle $INGRESS_HANDLE"
+        tc filter del dev $device parent ffff: protocol ip \
+            prio 50 handle 800::$INGRESS_HANDLE u32
+    else
+        INGRESS_HANDLE=$((INGRESS_HANDLE+1))
+        echo $INGRESS_HANDLE
+    fi
+
+    # 添加流控配置
+    echo "ingress add $IP_WITH_PREFIX"
+    tc filter add dev $device parent ffff: protocol ip \
+        prio 50 handle 800::$INGRESS_HANDLE u32 \
+        match ip src $IP_WITH_PREFIX police rate ${UPLOAD}kbit burst ${BUSRT}K \
+        drop flowid :1
+
+    if [ $? -ne 0 ]; then
+        htb_failure_exit "htb_init ingress add IP_WITH_PREFIX=$IP_WITH_PREFIX FAIL!"
+    fi
+} # htb_ingress_add
+
+## 对用户上行删除流控配置
+htb_ingress_del ()
+{
+   echo ""
+} #htb_ingress_del
+
+## 比对上行IP已生效配置
+htb_ingress_match_ip_from_config ()
+{
+    local BUF_OLD=`tc filter show dev $device parent ffff:`
+    local BUF=${BUF_OLD#*fh 800::}
+    while [ "$BUF" != "$BUF_OLD" ]
+    do
+        BUF_OLD=$BUF
+        INGRESS_HANDLE=${BUF%%order *}
+        echo $INGRESS_HANDLE
+        BUF=${BUF#*match }
+        BUF=${BUF%%at *}
+        INGRESS_MASK=${BUF#*/}
+        INGRESS_IP=${BUF%%/*}
+        echo $INGRESS_IP
+        echo $INGRESS_MASK
+        echo $SUBNET
+        if [ "$INGRESS_IP" == "$SUBNET" ];then
+            echo "$INGRESS_HANDLE match!"
+            INGRESS_MATCH=1
+            break
+        fi
+        BUF=${BUF_OLD#*fh 800::}
+    done
+} #htb_ingress_match_ip_from_config
+
+## 通过IP/PREFIX获取SUBNET
+htb_get_subnet ()
+{
+    IP=${IP_WITH_PREFIX%%/*}
+    PREFIX=${IP_WITH_PREFIX#*/}
+    if [ "$PREFIX" == "$IP_WITH_PREFIX" ];then
+        PREFIX=0
+    fi
+    IP_DEC=`ip2dec $IP`
+    SUBNET_DEC=$((($IP_DEC >> $PREFIX) << $PREFIX))
+    SUBNET=`dec2hex $SUBNET_DEC`
+} #htb_get_subnet
+
+### 对用户下行进行流控配置
+htb_egress_add ()
+{
+    echo "egress add $IP_WITH_PREFIX"
+} #htb_egress_add
+
+### 显示流量配置信息
+htb_show ()
+{
+    echo "### $device: queueing disciplines"
+    tc $1 qdisc show dev $device;
+
+    echo -e "\n### $device: traffic classes"
+    tc $1 class show dev $device;
+
+    echo -e "\n### $device: egress filtering rules"
+    tc $1 filter show dev $device;
+
+    echo -e "\n### $device: ingress filtering rules"
+    tc $1 filter show dev $device parent ffff:;
+} # htb_show
+
+### 初始化端口流控
+htb_init ()
+{
+    tc qdisc add dev $device root handle 1 htb
+    if [ $? -ne 0 ]; then
+        htb_failure_exit "htb_init egress FAIL!"
+    fi
+    tc qdisc add dev $device handle ffff: ingress
+    if [ $? -ne 0 ]; then
+        htb_failure_exit "htb_init ingress FAIL!"
+    fi
+} # htb_init
+
+### IP检查是否已经存在
+htb_ip_check ()
+{
+    echo -e "IP="$1"\n"
+} # htb_ip_check
+
+### 获取参数
+while [[ $# > 0 ]]
+do
+    key="$1"
+    case $key in
+        add|list|stats|stop|init|restart)
+            action="$1"
+            ;;
+        -d|--device)
+            device="$2"
+            shift
+            ;;
+        --do|--download)
+            DOWNLOAD="$2"
+            shift
+            ;;
+        --up|--upload)
+            UPLOAD="$2"
+            shift
+            ;;
+        --ip)
+            IP_WITH_PREFIX="$2"
+            htb_get_subnet
+            shift
+            ;;
+        ## test
+        --lip|--listip)
+            htb_ingress_match_ip_from_config
+            ;;
+        *)
+            echo "Unkown option: $1!!"
+            ;;
+    esac
+    shift # past value
+done
+
+### 动作执行
+case "$action" in
+    add)
+        htb_ingress_add
+        htb_egress_add
+        ;;
+    list)
+        htb_show
+        ;;
+    stats)
+        htb_show -s
+        ;;
+    stop)
+        htb_device_off
+        ;;
+    restart)
+        htb_device_off
+        ;;
+    init)
+        htb_init
+        ;;
+    *)
+        echo -e "\nUsage:\n`basename $0` {add|list|stats|stop|init}|{add}"
+        echo -e "\t [-d|--device]"
+        echo -e "\t [--do|--download]"
+        echo -e "\t [--up|--upload]"
+        echo -e "\t [--ip]"
+        ;;
+esac
