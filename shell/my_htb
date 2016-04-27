@@ -3,12 +3,18 @@
 #   Copyright (C) 2016 GBCOM fangzheng@gbcom.com.cn
 #
 
+# 总带宽
+MAX_RATE=100000
+DEFAULT_RATE=1000
 device=${device:-eth0}
-#DOWNLOAD=${DOWNLOAD:-100}
-#UPLOAD=${UPLOAD:-100}
-BUSRT=30
+BURST=${BURST:-30}
+PRIO=${PRIO:-50}
+PERTURB=${PERTURB:-10}
 SUBNET=
 INGRESS_MATCH=
+EGRESS_MATCH=
+CLASS=${CLASS:-2}
+IP_WITH_PREFIX=
 
 ### IP转换10进制
 ip2dec ()
@@ -53,6 +59,31 @@ htb_device_off ()
     tc qdisc del dev $device ingress 2> /dev/null
 } # htb_device_off
 
+### 对用户下行进行流控配置
+htb_egress_add ()
+{
+    if [ ! "${DOWNLOAD}" ];then
+        return 1
+    fi
+
+    # 创建class
+    tc class add dev $device parent 1:1 classid 1:${CLASS} htb \
+        rate ${DOWNLOAD}kbit burst ${BURST}k
+    if [ $? -ne 0 ];then
+        echo "htb_engress_add class add IP_WITH_PREFIX=$IP_WITH_PREFIX FAIL!"
+    fi
+
+    # 会话随机
+    tc qdisc add dev $device parent 1:${CLASS} handle ${CLASS}: sfq perturb ${PERTURB}
+
+    tc filter add dev $device parent 1:0 protocol ip prio ${PRIO} \
+        u32 match ip dst $IP_WITH_PREFIX flowid 1:${CLASS}
+    if [ $? -ne 0 ];then
+        htb_failure_exit "htb_egress_add filter add IP_WITH_PREFIX=$IP_WITH_PREFIX FAIL!"
+    fi
+} #htb_egress_add
+
+
 ### 对用户上行增加流控配置
 htb_ingress_add ()
 {
@@ -74,19 +105,52 @@ htb_ingress_add ()
     echo "ingress add $IP_WITH_PREFIX"
     tc filter add dev $device parent ffff: protocol ip \
         prio 50 handle 800::$INGRESS_HANDLE u32 \
-        match ip src $IP_WITH_PREFIX police rate ${UPLOAD}kbit burst ${BUSRT}K \
+        match ip src $IP_WITH_PREFIX police rate ${UPLOAD}kbit burst ${BURST}k \
         drop flowid :1
 
     if [ $? -ne 0 ]; then
-        htb_failure_exit "htb_init ingress add IP_WITH_PREFIX=$IP_WITH_PREFIX FAIL!"
+        htb_failure_exit "htb_ingress_add IP_WITH_PREFIX=$IP_WITH_PREFIX FAIL!"
     fi
 } # htb_ingress_add
 
 ## 对用户上行删除流控配置
 htb_ingress_del ()
 {
-   echo ""
+    htb_ingress_match_ip_from_config
+    if [ "$INGRESS_MATCH" ];then
+        echo "ingress del handle $INGRESS_HANDLE"
+        tc filter del dev $device parent ffff: protocol ip \
+            prio 50 handle 800::$INGRESS_HANDLE u32
+    else
+        htb_failure_exit "htb_ingress_del IP_WITH_PREFIX=$IP_WITH_PREFIX FAIL!"
+    fi
 } #htb_ingress_del
+
+## 比对上行IP已生效配置
+htb_egress_match_ip_from_config ()
+{
+    local BUF_OLD=`tc filter show dev $device`
+    local BUF=${BUF_OLD#*fh 800::}
+    while [ "$BUF" != "$BUF_OLD" ]
+    do
+        BUF_OLD=$BUF
+        EGRESS_HANDLE=${BUF%%order *}
+        echo $INGRESS_HANDLE
+        BUF=${BUF#*match }
+        BUF=${BUF%%at *}
+        EGRESS_MASK=${BUF#*/}
+        EGRESS_IP=${BUF%%/*}
+        echo $EGRESS_IP
+        echo $EGRESS_MASK
+        echo $SUBNET
+        if [ "$EGRESS_IP" == "$SUBNET" ];then
+            echo "$EGRESS_HANDLE match!"
+            EGRESS_MATCH=1
+            break
+        fi
+        BUF=${BUF_OLD#*fh 800::}
+    done
+} #htb_egress_match_ip_from_config
 
 ## 比对上行IP已生效配置
 htb_ingress_match_ip_from_config ()
@@ -127,12 +191,6 @@ htb_get_subnet ()
     SUBNET=`dec2hex $SUBNET_DEC`
 } #htb_get_subnet
 
-### 对用户下行进行流控配置
-htb_egress_add ()
-{
-    echo "egress add $IP_WITH_PREFIX"
-} #htb_egress_add
-
 ### 显示流量配置信息
 htb_show ()
 {
@@ -152,10 +210,32 @@ htb_show ()
 ### 初始化端口流控
 htb_init ()
 {
-    tc qdisc add dev $device root handle 1 htb
+    # 出口初始化
+    tc qdisc add dev $device root handle 1 htb default 2
     if [ $? -ne 0 ]; then
-        htb_failure_exit "htb_init egress FAIL!"
+        htb_failure_exit "htb_init egress qdisc FAIL!"
     fi
+    # 创建大根类
+    tc class add dev $device parent 1: classid 1:1 htb \
+        rate ${MAX_RATE}kbit burst ${BURST}k
+    if [ $? -ne 0 ]; then
+        htb_failure_exit "htb_init egress root classid FAIL!"
+    fi
+
+    # 创建默认小类
+    tc class add dev $device parent 1:1 classid 1:2 htb \
+        rate ${DEFAULT_RATE}kbit burst ${BURST}k
+    if [ $? -ne 0 ]; then
+        htb_failure_exit "htb_init egress default classid FAIL!"
+    fi
+
+    # 会话随机
+    tc qdisc add dev $device parent 1:2 handle 2: sfq perturb ${PERTURB}
+    if [ $? -ne 0 ]; then
+        htb_failure_exit "htb_init egress default sfq FAIL!"
+    fi
+
+    # 入口初始化
     tc qdisc add dev $device handle ffff: ingress
     if [ $? -ne 0 ]; then
         htb_failure_exit "htb_init ingress FAIL!"
@@ -173,7 +253,7 @@ while [[ $# > 0 ]]
 do
     key="$1"
     case $key in
-        add|list|stats|stop|init|restart)
+        add|del|list|stats|stop|init|restart)
             action="$1"
             ;;
         -d|--device)
@@ -193,9 +273,17 @@ do
             htb_get_subnet
             shift
             ;;
+        --burst)
+            BURST="$2"
+            shift
+            ;;
         ## test
         --lip|--listip)
             htb_ingress_match_ip_from_config
+            ;;
+        --class)
+            CLASS="$2"
+            shift
             ;;
         *)
             echo "Unkown option: $1!!"
@@ -210,6 +298,9 @@ case "$action" in
         htb_ingress_add
         htb_egress_add
         ;;
+    del)
+        htb_ingress_del
+        ;;
     list)
         htb_show
         ;;
@@ -221,15 +312,17 @@ case "$action" in
         ;;
     restart)
         htb_device_off
+        htb_init
         ;;
     init)
         htb_init
         ;;
     *)
-        echo -e "\nUsage:\n`basename $0` {add|list|stats|stop|init}|{add}"
+        echo -e "\nUsage:\n`basename $0` {add|del|list|stats|stop|init}"
         echo -e "\t [-d|--device]"
         echo -e "\t [--do|--download]"
         echo -e "\t [--up|--upload]"
         echo -e "\t [--ip]"
+        echo -e "\t [--burst]\n"
         ;;
 esac
