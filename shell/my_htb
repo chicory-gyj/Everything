@@ -3,8 +3,9 @@
 #   Copyright (C) 2016 GBCOM fangzheng@gbcom.com.cn
 #
 
-# 总带宽
+# 总带宽 Kbit
 MAX_RATE=100000
+# 默认带宽 Kbit
 DEFAULT_RATE=1000
 device=${device:-eth0}
 BURST=${BURST:-30}
