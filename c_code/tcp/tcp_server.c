@@ -25,7 +25,9 @@ void HandleTCPClient(int clntSocket)
     memset(echoBuffer, 0, sizeof(echoBuffer));
     int plus = 0;
     plus += sprintf(&echoBuffer[plus], "%s", "HTTP/1.1 200 OK\r\n");
+    printf("plus: %d\n", plus);
     plus += sprintf(&echoBuffer[plus], "%s", "Cache-Control: no-cache\r\n");
+    printf("plus: %d\n", plus);
 //    plus += sprintf(&echoBuffer[plus], "%s", "Content-Type: text/html;charset=UTF-8\r\n");
 //    plus += sprintf(&echoBuffer[plus], "%s", "Connection: close\r\n\r\nxixi");
     /* Send received string and receive again until end of transmission */
