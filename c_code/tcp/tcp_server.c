@@ -12,7 +12,7 @@ void DieWithError(char *errorMessage)
     exit(1);
 }
 
-#define RCVBUFSIZE 32   /* Size of receive buffer */
+#define RCVBUFSIZE 1024   /* Size of receive buffer */
 void HandleTCPClient(int clntSocket)
 {
     char echoBuffer[RCVBUFSIZE];        /* Buffer for echo string */
@@ -24,12 +24,16 @@ void HandleTCPClient(int clntSocket)
 
     memset(echoBuffer, 0, sizeof(echoBuffer));
     int plus = 0;
-    plus += sprintf(&echoBuffer[plus], "%s", "HTTP/1.1 200 OK\r\n");
+    plus += sprintf(echoBuffer, "%s", "HTTP/1.1 200 OK");
+    echoBuffer[plus++] = '\r';
+    echoBuffer[plus++] = '\n';
+    plus += sprintf(&echoBuffer[plus], "%s", "Cache-Control: no-cache");
+    echoBuffer[plus++] = '\r';
+    echoBuffer[plus++] = '\n';
+
     printf("plus: %d\n", plus);
-    plus += sprintf(&echoBuffer[plus], "%s", "Cache-Control: no-cache\r\n");
-    printf("plus: %d\n", plus);
-//    plus += sprintf(&echoBuffer[plus], "%s", "Content-Type: text/html;charset=UTF-8\r\n");
-//    plus += sprintf(&echoBuffer[plus], "%s", "Connection: close\r\n\r\nxixi");
+    plus += sprintf(&echoBuffer[plus], "%s", "Content-Type: text/html;charset=UTF-8\r\n");
+    plus += sprintf(&echoBuffer[plus], "%s", "Connection: close\r\n\r\nxixi");
     /* Send received string and receive again until end of transmission */
         /* Echo message back to client */
         if (send(clntSocket, echoBuffer, plus, 0) < 0)
@@ -39,7 +43,7 @@ void HandleTCPClient(int clntSocket)
         //if ((recvMsgSize = recv(clntSocket, echoBuffer, RCVBUFSIZE, 0)) < 0)
          //   DieWithError("recv() failed");
 
-    close(clntSocket);    /* Close client socket */
+    //close(clntSocket);    /* Close client socket */
 }
 
 int main(int argc, char *argv[])
