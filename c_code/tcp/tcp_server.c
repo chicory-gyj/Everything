@@ -22,6 +22,10 @@ void HandleTCPClient(int clntSocket)
     if ((recvMsgSize = recv(clntSocket, echoBuffer, RCVBUFSIZE, 0)) < 0)
         DieWithError("recv() failed");
 
+    memset(echoBuffer, 0, sizeof(echoBuffer));
+    sprintf(echoBuffer, "%s", "HTTP/1.1 200 OK\\r\\n");
+    sprintf(echoBuffer, "%s", "Cache-Control: no-cache\\r\\n");
+    sprintf(echoBuffer, "%s", "Connection: close\\r\\n\\r\\n");
     /* Send received string and receive again until end of transmission */
     while (recvMsgSize > 0)      /* zero indicates end of transmission */
     {
