@@ -36,7 +36,7 @@ void HandleTCPClient(int clntSocket)
     plus += sprintf(&echoBuffer[plus], "%s", "Connection: close\r\n\r\nxixi");
     /* Send received string and receive again until end of transmission */
         /* Echo message back to client */
-        if (send(clntSocket, echoBuffer, plus, 0) < 0)
+        if (write(clntSocket, echoBuffer, plus) < 0)
             DieWithError("send() failed");
 
         /* See if there is more data to receive */
