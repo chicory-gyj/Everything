@@ -23,20 +23,21 @@ void HandleTCPClient(int clntSocket)
         DieWithError("recv() failed");
 
     memset(echoBuffer, 0, sizeof(echoBuffer));
-    sprintf(echoBuffer, "%s", "HTTP/1.1 200 OK\r\n");
-    sprintf(echoBuffer, "%s", "Cache-Control: no-cache\r\n");
-    sprintf(echoBuffer, "%s", "Content-Type: text/html;charset=UTF-8\r\n");
-    sprintf(echoBuffer, "%s", "Connection: close\r\n\r\nxixi");
+    int plus = 0;
+    plus += sprintf(&echoBuffer[plus], "%s", "HTTP/1.1 200 OK\r\n");
+    plus += sprintf(&echoBuffer[plus], "%s", "Cache-Control: no-cache\r\n");
+//    plus += sprintf(&echoBuffer[plus], "%s", "Content-Type: text/html;charset=UTF-8\r\n");
+//    plus += sprintf(&echoBuffer[plus], "%s", "Connection: close\r\n\r\nxixi");
     /* Send received string and receive again until end of transmission */
         /* Echo message back to client */
-        if (send(clntSocket, echoBuffer, strlen(echoBuffer), 0) < 0)
+        if (send(clntSocket, echoBuffer, plus, 0) < 0)
             DieWithError("send() failed");
 
         /* See if there is more data to receive */
         //if ((recvMsgSize = recv(clntSocket, echoBuffer, RCVBUFSIZE, 0)) < 0)
          //   DieWithError("recv() failed");
 
-    //close(clntSocket);    /* Close client socket */
+    close(clntSocket);    /* Close client socket */
 }
 
 int main(int argc, char *argv[])
