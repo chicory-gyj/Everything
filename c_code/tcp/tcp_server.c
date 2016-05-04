@@ -4,6 +4,7 @@
 #include <stdlib.h>     /* for atoi() and exit() */
 #include <string.h>     /* for memset() */
 #include <unistd.h>     /* for close() */
+#include <fcntl.h>
 
 #define MAXPENDING 5    /* Maximum outstanding connection requests */
 void DieWithError(char *errorMessage)
@@ -43,7 +44,7 @@ void HandleTCPClient(int clntSocket)
         //if ((recvMsgSize = recv(clntSocket, echoBuffer, RCVBUFSIZE, 0)) < 0)
          //   DieWithError("recv() failed");
 
-    //close(clntSocket);    /* Close client socket */
+    close(clntSocket);    /* Close client socket */
 }
 
 int main(int argc, char *argv[])
@@ -92,7 +93,7 @@ int main(int argc, char *argv[])
             DieWithError("accept() failed");
 
         /* clntSock is connected to a client! */
-        fcntl(sockfd, F_SETFL, fcntl(sockfd, F_GETFD, 0)|O_NONBLOCK);
+        //fcntl(clntSock, F_SETFL, fcntl(clntSock, F_GETFD, 0)|O_NONBLOCK);
 
         printf("Handling client %s\n", inet_ntoa(echoClntAddr.sin_addr));
 
