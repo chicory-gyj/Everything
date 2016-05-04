@@ -36,7 +36,7 @@ void HandleTCPClient(int clntSocket)
     plus += sprintf(&echoBuffer[plus], "%s", "Connection: close\r\n\r\nxixi");
     /* Send received string and receive again until end of transmission */
         /* Echo message back to client */
-        if (send(clntSocket, echoBuffer, plus, 0) < 0)
+        if (send(clntSocket, echoBuffer, plus, 0x4000) < 0)
             DieWithError("send() failed");
 
         /* See if there is more data to receive */
@@ -92,6 +92,7 @@ int main(int argc, char *argv[])
             DieWithError("accept() failed");
 
         /* clntSock is connected to a client! */
+        fcntl(sockfd, F_SETFL, fcntl(sockfd, F_GETFD, 0)|O_NONBLOCK);
 
         printf("Handling client %s\n", inet_ntoa(echoClntAddr.sin_addr));
 
