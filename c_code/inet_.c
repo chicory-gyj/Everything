@@ -9,7 +9,7 @@ int main()
     int itest;
     inet_pton(AF_INET, "192.168.1.1", (void *)&itest);
     inet_pton(AF_INET, "192.168.1.1", (void *)&s);
-    inet_pton(AF_INET, "192.168.1.1", aucip);
+    inet_pton(AF_INET, "10.60.123.222", aucip);
     printf("%d\n", aucip[0]);
     printf("%d\n", aucip[3]*256*256*256 + aucip[2]*256*256 + aucip[1]*256 + aucip[0]);
     printf("itest:%d\n", itest);
