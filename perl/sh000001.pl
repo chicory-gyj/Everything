@@ -1,4 +1,4 @@
-#!/bin/env perl
+#!/usr/bin/env perl
 $id = "sh000001";
 
 $filename = "/samba/";
