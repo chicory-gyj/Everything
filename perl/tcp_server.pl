@@ -24,7 +24,7 @@ while ($client = $server->accept())
         {
             break;
         }
-        $clients->send("hahahah");
+        $client->send("hahahah");
 
         print "\n";
     }
