@@ -17,5 +17,7 @@ int trans(int type)
 
 int main()
 {
+    int type = 2;
+    printf("%d", trans(2));
 
 }
