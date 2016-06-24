@@ -26,5 +26,9 @@ int main()
             "", port?port:0);
     printf("plus: %d\n", plus);
     printf("string: %s\n", string);
+
+    char str[32] = {0};
+    sprintf(str, "%d", 1000);
+    printf("str: %s\n", str);
 }
 
