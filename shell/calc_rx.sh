@@ -22,12 +22,12 @@ do
         `sleep $((intervalo))s`
         rx2=`cat $info$interface/statistics/rx_bytes`
         tx2=`cat $info$interface/statistics/tx_bytes`
-        echo $interface >> ~/$interface
-        echo ---- >> ~/$interface
-        echo RX: $((($rx2-$rx1)/($intervalo*1024))) Kbps >> ~/$interface
-        echo RX: $((($rx2-$rx1)/($intervalo*1024*1024))) Mbps >> ~/$interface
-        echo TX: $((($tx2-$tx1)/($intervalo*1024))) Kbps >> ~/$interface
-        echo TX: $((($tx2-$tx1)/($intervalo*1024*1024))) Mbps >> ~/$interface
-	echo `date` >> ~/$interface
+        echo $interface
+        echo ----
+        echo RX: $((($rx2-$rx1)/($intervalo*1024))) Kbps
+        echo RX: $((($rx2-$rx1)/($intervalo*1024*1024))) Mbps
+        echo TX: $((($tx2-$tx1)/($intervalo*1024))) Kbps
+        echo TX: $((($tx2-$tx1)/($intervalo*1024*1024))) Mbps
+	echo `date`
     done
 done
