@@ -18,17 +18,23 @@
 #include <stdlib.h>
 int main()
 {
-    int port = 0;
-    char string[128] = {0};
-    int plus = 0;
-    plus += sprintf(&string[plus], port?" \
-            1 %d": \
-            "", port?port:0);
-    printf("plus: %d\n", plus);
-    printf("string: %s\n", string);
+    /* int port = 0; */
+    /* char string[128] = {0}; */
+    /* int plus = 0; */
+    /* plus += sprintf(&string[plus], port?" \ */
+    /*         1 %d": \ */
+    /*         "", port?port:0); */
+    /* printf("plus: %d\n", plus); */
+    /* printf("string: %s\n", string); */
 
-    char str[32] = {0};
-    sprintf(str, "%d", 1000);
-    printf("str: %s\n", str);
+    /* char str[32] = {0}; */
+    /* sprintf(str, "%d", 1000); */
+    /* printf("str: %s\n", str); */
+
+    char test[100] = {0};
+    sprintf(test, "%s", "abc");
+    printf("test: %s", test);
+    sprintf(test, "%s", "ft");
+    printf("\ntest: %s", test);
 }
 
