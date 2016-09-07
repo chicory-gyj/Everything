@@ -7,7 +7,7 @@ int main()
     char *client_list_copy = strdup(client_list);
     char *item;
     char *ip_string;
-    while((item = strsep(&client_list, ";")))
+    while((item = strsep(&client_list_copy, ";")))
     {
         if((ip_string = strsep(&item, "|")))
         {
