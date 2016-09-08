@@ -1,5 +1,7 @@
 import urllib2
 import csv
+import time
+import socket
 
 hdr = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11',
        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -9,28 +11,38 @@ hdr = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML,
        'Connection': 'keep-alive'}
 
 markets = 'SH SZ'
-market = 'SZ'
+market = 'SH'
 if market == 'SH':
     code_start = '600000'
     code_end   = '604000'
 elif market == 'SZ':
     code_start = '000001'
-    code_end   = '004000'
+    code_end   = '003000'
 
 date_need = "2015-01-01"
 local_timeout = 3
 
+myfile = open(market + "_history", 'a+')
+myfile.write(time.strftime("%d/%m/%Y") + '\n')
+myfile.close()
+
 for code in range(int(code_start), int(code_end)):
-    myfile = open(market + "_history", 'a+')
     content_date_ok = []
     code = str(code).zfill(6)
     url = 'http://xueqiu.com/S/' + market + str(code) + '/historical.csv'
     req = urllib2.Request(url, headers = hdr)
-    content = urllib2.urlopen(req, timeout = local_timeout).read()
+    try:
+        content = urllib2.urlopen(req, timeout = local_timeout).read()
+    except urllib2.HTTPError, e:
+        continue
+    except urllib2.URLError, e:
+        continue
+    except socket.timeout, e:
+        continue
     if str(code) not in content:
         continue
     content = content.replace('"', '')
-    content_delete_first_line = '\n'.join(content.split('\n')[2:])
+    content_delete_first_line = '\n'.join(content.split('\n')[1:])
     content_rstrip = content_delete_first_line.rstrip('\n')
     content_list = content_rstrip.split('\n')
     content_list_in_list = [x.split(',') for x in content_list]
@@ -38,6 +50,8 @@ for code in range(int(code_start), int(code_end)):
         if x[1] > date_need:
             content_date_ok.append(x)
     content_list_in_list = content_date_ok
+    if not content_list_in_list:
+        continue
     current_price = float(content_list_in_list[-1][5])
     sorted_by_second = sorted(content_list_in_list, key=lambda x: float(x[5]), reverse=True)
     biggest_price = float(sorted_by_second[0][5])
@@ -49,5 +63,6 @@ for code in range(int(code_start), int(code_end)):
     print 'Biggest Price: ' + str(biggest_price)
     print 'Star ' + str(code) + ': ' + str(star) + '\n'
     out = 'Star ' + str(code) + ': ' + str(star) + '\n'
+    myfile = open(market + "_history", 'a+')
     myfile.write(out)
     myfile.close()
