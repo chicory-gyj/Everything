@@ -18,13 +18,15 @@ elif market == 'SZ':
     code_end   = '004000'
 
 date_need = "2015-01-01"
+local_timeout = 3
 
 for code in range(int(code_start), int(code_end)):
+    myfile = open(market + "_history", 'a+')
     content_date_ok = []
     code = str(code).zfill(6)
     url = 'http://xueqiu.com/S/' + market + str(code) + '/historical.csv'
     req = urllib2.Request(url, headers = hdr)
-    content = urllib2.urlopen(req, timeout = 10).read()
+    content = urllib2.urlopen(req, timeout = local_timeout).read()
     if str(code) not in content:
         continue
     content = content.replace('"', '')
@@ -46,3 +48,6 @@ for code in range(int(code_start), int(code_end)):
     print 'Current Price: ' + str(current_price)
     print 'Biggest Price: ' + str(biggest_price)
     print 'Star ' + str(code) + ': ' + str(star) + '\n'
+    out = 'Star ' + str(code) + ': ' + str(star) + '\n'
+    myfile.write(out)
+    myfile.close()
