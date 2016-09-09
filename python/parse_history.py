@@ -11,7 +11,7 @@ hdr = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML,
        'Connection': 'keep-alive'}
 
 markets = 'SH SZ'
-market = 'SH'
+market = 'SZ'
 if market == 'SH':
     code_start = '600000'
     code_end   = '604000'
@@ -39,6 +39,8 @@ for code in range(int(code_start), int(code_end)):
     except urllib2.URLError, e:
         continue
     except socket.timeout, e:
+        continue
+    except ssl.SSLError, e:
         continue
     if str(code) not in content:
         continue
