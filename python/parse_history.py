@@ -1,7 +1,10 @@
+#!/usr/bin/env python
+
 import urllib2
 import csv
 import time
 import socket
+import ssl
 
 hdr = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11',
        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -11,7 +14,7 @@ hdr = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML,
        'Connection': 'keep-alive'}
 
 markets = 'SH SZ'
-market = 'SZ'
+market = 'SH'
 if market == 'SH':
     code_start = '600000'
     code_end   = '604000'
@@ -27,6 +30,7 @@ myfile.write(time.strftime("%d/%m/%Y") + '\n')
 myfile.close()
 
 for code in range(int(code_start), int(code_end)):
+    #code = '002481'
     content_date_ok = []
     weight = 1
     code = str(code).zfill(6)
@@ -60,7 +64,13 @@ for code in range(int(code_start), int(code_end)):
     for idx, x in enumerate(content_list_in_list):
         if (idx + 1) == len(content_list_in_list):
             break
-        y = content_list_in_list[(idx + 1) % len(content_list_in_list)]
+        idy = idx
+        y = content_list_in_list[(idy + 1) % len(content_list_in_list)]
+        while float(y[2]) == 0:
+            idy = idy + 1
+            if idy == len(content_list_in_list):
+                break
+            y = content_list_in_list[(idy + 1) % len(content_list_in_list)]
         if float(y[2]) == 0:
             continue
         delta = float(x[5])/float(y[2])
