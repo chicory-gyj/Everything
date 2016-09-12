@@ -16,7 +16,7 @@ hdr = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML,
 markets = 'SH SZ'
 market = 'SH'
 if market == 'SH':
-    code_start = '600000'
+    code_start = '603838'
     code_end   = '604000'
 elif market == 'SZ':
     code_start = '000001'
@@ -68,7 +68,7 @@ for code in range(int(code_start), int(code_end)):
         y = content_list_in_list[(idy + 1) % len(content_list_in_list)]
         while float(y[2]) == 0:
             idy = idy + 1
-            if idy == len(content_list_in_list):
+            if (idy + 1) >= len(content_list_in_list):
                 break
             y = content_list_in_list[(idy + 1) % len(content_list_in_list)]
         if float(y[2]) == 0:
