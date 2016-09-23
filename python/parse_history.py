@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import urllib2
-import csv
 import time
 import socket
 import ssl
@@ -17,10 +16,10 @@ markets = 'SH SZ'
 market = 'SH'
 if market == 'SH':
     code_start = '603838'
-    code_end   = '604000'
+    code_end = '604000'
 elif market == 'SZ':
     code_start = '000001'
-    code_end   = '003000'
+    code_end = '003000'
 
 date_need = "2015-01-01"
 local_timeout = 3
@@ -30,14 +29,14 @@ myfile.write(time.strftime("%d/%m/%Y") + '\n')
 myfile.close()
 
 for code in range(int(code_start), int(code_end)):
-    #code = '002481'
+    # code = '002481'
     content_date_ok = []
     weight = 1
     code = str(code).zfill(6)
     url = 'http://xueqiu.com/S/' + market + str(code) + '/historical.csv'
-    req = urllib2.Request(url, headers = hdr)
+    req = urllib2.Request(url, headers=hdr)
     try:
-        content = urllib2.urlopen(req, timeout = local_timeout).read()
+        content = urllib2.urlopen(req, timeout=local_timeout).read()
     except urllib2.HTTPError, e:
         continue
     except urllib2.URLError, e:
@@ -52,7 +51,7 @@ for code in range(int(code_start), int(code_end)):
     content_delete_first_line = '\n'.join(content.split('\n')[1:])
     content_rstrip = content_delete_first_line.rstrip('\n')
     print "result:"
-    #print content_rstrip
+    # print content_rstrip
     content_list = content_rstrip.split('\n')
     content_list_in_list = [x.split(',') for x in content_list]
     for x in content_list_in_list:
