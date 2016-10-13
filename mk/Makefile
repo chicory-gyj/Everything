@@ -1,15 +1,11 @@
 SRCS      = $(wildcard *.c)
 OBJS      = $(patsubst %.c, %.o, $(SRCS))
+all : $(OBJS)
 
-i% : $(OBJS)
-	@echo $@ "1 \$\@"
-	@echo $^ "3 \$\^"
-	@echo $% "2 \$\%"
-	@echo $<
-	@echo $*
-
-%.o : %.c
-	@echo $* "\$\*"
+a.o b.o : a.c b.c
+	gcc $<
+	@echo $@
+	@echo 'xixi'
 
 clean: 
 	rm -rf $(OBJS)

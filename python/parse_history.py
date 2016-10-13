@@ -13,9 +13,9 @@ hdr = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML,
        'Connection': 'keep-alive'}
 
 markets = 'SH SZ'
-market = 'SH'
+market = 'SZ'
 if market == 'SH':
-    code_start = '603838'
+    code_start = '600001'
     code_end = '604000'
 elif market == 'SZ':
     code_start = '000001'
