@@ -8,16 +8,38 @@
 #
 YELLOW='\033[0;33m'
 NC='\033[0m'
+#redis_server=/home/fabius8/cluster-test/redis-server
+redis_server=`which redis-server`
 redis_cluster_tool=`which redis-cluster-tool`
-gatewayList="10.60.123.222;10.60.1.20;10.60.123.111"
-#gatewayList=`nvramcli get dhcp_failover_cgw_list`
+#gatewayList="10.60.123.222;10.60.1.20;10.60.123.111"
+gatewayList=`nvramcli get dhcp_failover_cgw_list`
 cluster_create_command="$redis_cluster_tool -C \"cluster_create"
 masterPort=7001
 slavePort=7002
 ipList=
 ipNum=
+masterRunDir="/opt/redisMaster"
+slaveRunDir="/opt/redisSlave"
 
-### Need one parameter $1
+### Start redis-server
+### Input parameter $1:($masterRunDir|$slaveRunDir)
+### Input parameter $2:($masterPort|$slavePort)
+fn_start_redis_server () {
+    mkdir -p $1
+    touch $1/redis.conf
+    cat <<EOF > "$1/redis.conf"
+port $2
+cluster-enabled yes
+cluster-config-file nodes.conf
+cluster-node-timeout 5000
+appendonly yes
+protected-mode no
+daemonize yes
+EOF
+    cd $1; pwd; $redis_server "$1/redis.conf"
+}
+
+### Need one parameter $1:String
 fn_check_cluster_create_result () {
     if [[ $1 == *"Cluster created success!"* ]]; then
         # OK
@@ -61,6 +83,23 @@ fn_cluster_destroy () {
     done
 }
 
+### Print help information
+fn_help () {
+        cat << EOF
+Usage: $0 {ready|start|stop|restart}
+
+ready:       redis-server startup
+start:       redis cluster start configure
+stop:        redis cluster stop, all reset
+restart:     redis-server restart
+             redis cluster reconfigure
+             
+Tips: If the program is running for the first time,
+      it is best to choose to *restart*
+
+EOF
+}
+
 #############################################################################
 ############################### START/COMPILE ###############################
 #############################################################################
@@ -87,13 +126,11 @@ while [[ $# -gt 0 ]]
 do
     key="$1"
     case $key in
-        start|stop)
+        ready|start|stop|restart)
             action=$key
             ;;
-        -h)
-            cat << EOF
-Usage: $0 {start|stop}
-EOF
+        *)
+            fn_help
             exit 2
             ;;
     esac
@@ -102,6 +139,11 @@ done
 
 ### Run the command
 case "$action" in
+    ready)
+        echo -e "redis-server get ready..."
+        fn_start_redis_server $masterRunDir $masterPort
+        fn_start_redis_server $slaveRunDir $slavePort
+        ;;
     start)
         echo "redis cluster configure start..."
         fn_cluster_create
@@ -110,9 +152,15 @@ case "$action" in
         echo "redis cluster configure stop..."
         fn_cluster_destroy
         ;;
+    restart)
+        echo "redis cluster configure restart..."
+        pkill -9 redis-server
+        fn_start_redis_server $masterRunDir $masterPort
+        fn_start_redis_server $slaveRunDir $slavePort
+        fn_cluster_destroy
+        fn_cluster_create
+        ;;
     *)
-        cat << EOF
-Usage: $0 {start|stop|-h}
-EOF
+        fn_help
         ;;
 esac
