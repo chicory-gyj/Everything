@@ -4,6 +4,7 @@ import urllib2
 import time
 import socket
 import ssl
+import os
 
 hdr = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11',
        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -26,6 +27,8 @@ local_timeout = 3
 
 myfile = open(market + "_history", 'a+')
 myfile.write(time.strftime("%d/%m/%Y") + '\n')
+nowday = time.strftime("%d/%m/%Y")
+nowday_2 = time.strftime("%Y%m%d")
 myfile.close()
 
 for code in range(int(code_start), int(code_end)):
@@ -97,3 +100,8 @@ for code in range(int(code_start), int(code_end)):
     myfile = open(market + "_history", 'a+')
     myfile.write(out)
     myfile.close()
+
+command = "cat " + market + "_history" + "|grep -A 100000 " + nowday + \
+          "|grep Star|sort -k 3 -n > " + nowday_2 + "_" + market
+os.system(command)
+
