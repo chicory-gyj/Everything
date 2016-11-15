@@ -32,9 +32,7 @@ int main()
     /* printf("str: %s\n", str); */
 
     char test[100] = {0};
-    sprintf(test, "%s", "abc");
+    sprintf(test, "%.20s", "css");
     printf("test: %s", test);
-    sprintf(test, "%s", "ft");
-    printf("\ntest: %s", test);
 }
 
