@@ -32,13 +32,24 @@ void binary_init(int *array, int start, int end)
  */
 void binary_sort(int *array, int start, int end)
 {
-    if (start == end) {
+    printf("@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
+    printf("start: %d end: %d\n", start, end);
+    if ((start < 0) || (start == end) || (end < 0) || (start > end)) {
         return;
+    }
+
+    for (int i = start; i <= end; i++) {
+        printf("array[%d]: %d \n", i, array[i]);
     }
 
     int key = array[start];
     int i = start + 1;
     int j = end;
+
+    if (i == j) {
+        if (key > array[i])
+            array_swap(&array[start], &array[j]);
+    }
     while (i < j) {
         if (array[i] > key) {
             array_swap(&array[i], &array[j]);
@@ -48,6 +59,10 @@ void binary_sort(int *array, int start, int end)
         }
         /* check end */
         if (i == j) {
+            if (key > array[i])
+                array_swap(&array[start], &array[i]);
+            else
+                array_swap(&array[i - 1], &array[start]);
             break;
         }
         if (array[j] < key) {
@@ -59,11 +74,22 @@ void binary_sort(int *array, int start, int end)
         }
         /* check end */
         if (i == j) {
+            if (key > array[i])
+                array_swap(&array[start], &array[i]);
+            else
+                array_swap(&array[i - 1], &array[start]);
             break;
         }
     }
+
+
+    printf(" \n");
+    for (int i = start; i <= end; i++) {
+        printf("array[%d]: %d \n", i, array[i]);
+    }
+
     binary_sort(array, start, i - 1);
-    binary_sort(array, i - 1, end);
+    binary_sort(array, i + 1, end);
 }
 
 /*
@@ -83,6 +109,7 @@ void main()
         printf("array[%d]: %d \n", i, array[i]);
     }
 
+    printf("xxxxxxxxxxxxxxxxxxxxxx\n");
     binary_sort(array, 0, 31);
     printf("======================\n");
     for (int i = 0; i <= 31; i++) {

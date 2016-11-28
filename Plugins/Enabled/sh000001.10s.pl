@@ -22,7 +22,7 @@ if($vol == NULL)
 print $vol,"亿 $ext ";
 
 # 个股
-$id = "sh600770";
+$id = "sz002568";
 $command = `curl -s --retry 3 "http://qt.gtimg.cn/r=479864314&q=$id"`;
 $origin = $command;
 $ext = $origin;

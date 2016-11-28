@@ -34,5 +34,7 @@ int main()
     char test[100] = {0};
     sprintf(test, "%.20s", "css");
     printf("test: %s", test);
+    sprintf(test, "haha");
+    printf("test: %s", test);
 }
 
